@@ -1,0 +1,19 @@
+.detalle-container {
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.detalle-box {
+    background: white;
+    padding: 30px;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 10px;
+}
+
+.imagen-box img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}

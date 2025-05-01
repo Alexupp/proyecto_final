@@ -1,0 +1,35 @@
+.register-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, #3f51b5, #5a55ae);
+}
+
+.register-box {
+    padding: 40px;
+    width: 100%;
+    max-width: 450px;
+    background-color: #ffffffee;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(6px);
+}
+
+.register-button {
+    margin-top: 20px;
+    padding: 12px;
+    font-weight: bold;
+    text-transform: none;
+}
+
+.register-footer {
+    margin-top: 20px;
+    color: #333;
+}
+
+.register-footer a {
+    color: #3f51b5;
+    text-decoration: none;
+    font-weight: 500;
+}

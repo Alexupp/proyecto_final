@@ -1,0 +1,21 @@
+.registro-container {
+    min-height: 100vh;
+    background: linear-gradient(to right, #4a90e2, #5e60ce);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.registro-box {
+    background: #fff;
+    padding: 40px;
+    max-width: 900px;
+    width: 100%;
+    border-radius: 12px;
+}
+
+.integrante-box {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,16 @@
+.avance-container {
+    min-height: 100vh;
+    background: linear-gradient(to right, #00b4db, #0083b0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+}
+
+.avance-box {
+    background: #fff;
+    padding: 40px;
+    max-width: 700px;
+    width: 100%;
+    border-radius: 12px;
+}
