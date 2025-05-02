@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Paper,
     Table,
@@ -21,23 +21,40 @@ import { Edit, Delete } from '@mui/icons-material';
 import './gestion_usuario.css';
 
 const UserManagement = () => {
-    const [users, setUsers] = useState([
-        { id: 1, nombre: 'Juan Pérez', email: 'juan@mail.com', tipo: 'estudiante' },
-        { id: 2, nombre: 'Ana Gómez', email: 'ana@mail.com', tipo: 'docente' },
-    ]);
+    const [users, setUsers] = useState([]); // Estado para los usuarios
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({ id: null, nombre: '', email: '', tipo: 'estudiante' });
+    const [form, setForm] = useState({ _id: null, nombre: '', email: '', tipo: 'estudiante' });
+
+    // Cargar los usuarios desde el backend
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/users');
+            if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
+            const data = await response.json();
+            setUsers(data);
+        } catch (error) {
+            console.error('Error al obtener los usuarios:', error);
+        }
+    };
+
+
+    // Llamar a la función cuando el componente se monta
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
 
     const handleOpen = (user = null) => {
         if (user) {
-            setForm(user);
+            setForm(user); // Si se pasa un usuario, configurar el formulario para editar
             setEditMode(true);
         } else {
-            setForm({ id: null, nombre: '', email: '', tipo: 'estudiante' });
+            // Resetear el formulario para creación de usuario
+            setForm({ _id: null, nombre: '', email: '', tipo: 'estudiante' });
             setEditMode(false);
         }
-        setOpen(true);
+        setOpen(true); // Abrir el Dialog
     };
 
     const handleClose = () => setOpen(false);
@@ -46,18 +63,62 @@ const UserManagement = () => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleSave = () => {
-        if (editMode) {
-            setUsers(users.map((u) => (u.id === form.id ? form : u)));
-        } else {
-            setUsers([...users, { ...form, id: Date.now() }]);
+    const handleSave = async () => {
+        try {
+            if (editMode) {
+                // Actualizar usuario (PUT)
+                const response = await fetch(`http://localhost:5000/api/users/${form._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(form),
+                });
+    
+                if (!response.ok) throw new Error('Error al actualizar el usuario');
+                const updatedUser = await response.json();
+    
+                setUsers(users.map((u) => (u._id === updatedUser._id ? updatedUser : u)));
+            } else {
+                // Crear nuevo usuario (POST)
+                const response = await fetch('http://localhost:5000/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(form),
+                });
+    
+                if (!response.ok) throw new Error('Error al crear el usuario');
+                const newUser = await response.json();
+    
+                setUsers([...users, newUser]);
+            }
+    
+            handleClose();
+        } catch (error) {
+            console.error('Error al guardar usuario:', error);
         }
-        handleClose();
     };
+    
 
-    const handleDelete = (id) => {
-        setUsers(users.filter((u) => u.id !== id));
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/users/${id}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                setUsers(users.filter((u) => u._id !== id)); // Eliminar el usuario del estado
+            } else {
+                const data = await response.json();
+                console.error('Error al eliminar usuario:', data.error || 'Desconocido');
+            }
+        } catch (error) {
+            console.error('Error al eliminar el usuario:', error);
+        }
     };
+    
+    
 
     return (
         <div className="user-management-container">
@@ -80,7 +141,7 @@ const UserManagement = () => {
                     </TableHead>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user.id}>
+                            <TableRow key={user._id}>
                                 <TableCell>{user.nombre}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.tipo}</TableCell>
@@ -88,13 +149,14 @@ const UserManagement = () => {
                                     <IconButton onClick={() => handleOpen(user)} color="primary">
                                         <Edit />
                                     </IconButton>
-                                    <IconButton onClick={() => handleDelete(user.id)} color="error">
+                                    <IconButton onClick={() => handleDelete(user._id)} color="error">
                                         <Delete />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
+
                 </Table>
             </TableContainer>
 

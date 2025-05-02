@@ -1,0 +1,26 @@
+.reportes-container {
+    min-height: 100vh;
+    background: #f4f6f8;
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.reportes-box {
+    width: 100%;
+    max-width: 900px;
+    padding: 30px;
+    background: #fff;
+    border-radius: 12px;
+}
+
+.filtros {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+}
+
+.tabla-proyectos {
+    margin-top: 20px;
+}

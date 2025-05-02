@@ -7,19 +7,22 @@ import RegistroAvance from './Pages/registro_avance/registro_avance';
 import ListaProyectos from './Pages/lista_proyecto/lista_proyecto';
 import DetalleProyecto from './Pages/detalle_proyecto/detalle_proyecto';
 import EstadoProyecto from './Pages/estado_proyecto/estado_proyecto';
+import VistaReportes from './Pages/reporte/reporte';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+      <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/gestion-usuarios" element={<UserManagement />} /> {/* 👈 nueva ruta */}
+        <Route path="/gestion-usuarios" element={<UserManagement />} />
         <Route path="/registro-proyecto" element={<RegistroProyecto />} />
         <Route path="/registro-avance" element={<RegistroAvance />} />
         <Route path="/proyectos" element={<ListaProyectos />} />
         <Route path="/proyecto/:id" element={<DetalleProyecto />} />
         <Route path="/estado-proyecto" element={<EstadoProyecto />} />
+        <Route path="/reportes" element={<VistaReportes />} />
       </Routes>
     </Router>
   );
