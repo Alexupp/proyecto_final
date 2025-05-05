@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     TextField,
     Button,
@@ -15,31 +15,31 @@ import {
 } from '@mui/material';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase'; // Ajusta la ruta según tu estructura
 import './reporte.css';
-
-const proyectosMock = [
-    {
-        id: 1,
-        titulo: 'Proyecto A',
-        institucion: 'Institución 1',
-        docente: 'Prof. Juan Pérez',
-        estado: 'Activo',
-    },
-    {
-        id: 2,
-        titulo: 'Proyecto B',
-        institucion: 'Institución 2',
-        docente: 'Dra. Ana Ruiz',
-        estado: 'Finalizado',
-    },
-];
 
 const VistaReportes = () => {
     const [titulo, setTitulo] = useState('');
     const [institucion, setInstitucion] = useState('');
     const [docente, setDocente] = useState('');
     const [estado, setEstado] = useState('');
-    const [resultados, setResultados] = useState(proyectosMock);
+    const [resultados, setResultados] = useState([]);
+
+    // Fetch proyectos desde Firestore
+    const fetchProyectos = async () => {
+        try {
+            const proyectosSnapshot = await getDocs(collection(db, "proyectos"));
+            const proyectosList = proyectosSnapshot.docs.map(doc => doc.data());
+            setResultados(proyectosList);
+        } catch (error) {
+            console.error("Error al obtener proyectos:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProyectos();
+    }, []);
 
     const handleBuscar = () => {
         const filtrados = proyectosMock.filter((p) => {

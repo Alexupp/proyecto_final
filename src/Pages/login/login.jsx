@@ -1,61 +1,56 @@
 import React, { useState } from 'react';
-import { TextField, Button, Paper, Typography, Box, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import {
+    TextField, Button, Paper, Typography, Box
+} from '@mui/material';
 import './login.css';
-import { Link, useNavigate } from 'react-router-dom'; // Importamos useNavigate
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState(''); // Para mostrar el error si ocurre
-    const [openModal, setOpenModal] = useState(false); // Para abrir y cerrar el modal
-    const [modalMessage, setModalMessage] = useState(''); // El mensaje del modal
-    const [modalTitle, setModalTitle] = useState(''); // Título del modal
-    const navigate = useNavigate(); // Usamos el hook para redirigir
+    const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        // Realizamos el request al backend para hacer login
         try {
-            const response = await fetch('/api/users/login', { // Asegúrate de que esta ruta sea correcta
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
 
-            const data = await response.json();
+            // Obtener documento del usuario en Firestore
+            const userDocRef = doc(db, 'usuarios', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
 
-            if (response.ok) {
-                // Si el login es exitoso, almacenamos el token en el localStorage
-                localStorage.setItem('token', data.token); 
-                localStorage.setItem('user', JSON.stringify(data.user)); // Guardamos la info del usuario (si lo necesitas)
+            if (userDocSnap.exists()) {
+                const userData = userDocSnap.data();
 
-                setModalTitle('Éxito');
-                setModalMessage('Inicio de sesión exitoso');
-                setOpenModal(true);
-
-                // Redirigimos a la página correspondiente según el tipo de usuario
+                // Redirigir según tipo de usuario
                 setTimeout(() => {
-                    if (data.user.tipo === 'estudiante') {
-                        navigate('/registro-avance'); // Redirigir a registro de avances
-                    } else if (data.user.tipo === 'coordinador') {
-                        navigate('/gestion-usuarios'); // Redirigir a gestión de usuarios
-                    } else if (data.user.tipo === 'docente') {
-                        navigate('/registro-proyecto'); // Redirigir a registro de proyectos
+                    if (userData.tipo === 'estudiante') {
+                        navigate('/registro-proyecto'); // Redirigir a la página de estudiante
+                    } else if (userData.tipo === 'docente') {
+                        navigate('/proyectos'); // Redirigir a la página de docente
+                    } else if (userData.tipo === 'coordinador') {
+                        navigate('/gestion-usuarios'); // Redirigir a la página de coordinador
+                    } else {
+                        navigate('/'); // Página principal por defecto
                     }
-                }, 2000); // Redirigir después de 2 segundos
+                }, 2000);
             } else {
-                setModalTitle('Error');
-                setModalMessage(data.error || 'Usuario o contraseña incorrectos');
-                setOpenModal(true);
+                alert('No se encontró el perfil del usuario.');
             }
         } catch (error) {
-            console.error('Error al iniciar sesión:', error);
-            setModalTitle('Error');
-            setModalMessage('Error al conectar con el servidor');
-            setOpenModal(true);
+            const errorCode = error.code;
+            let message = 'Ocurrió un error';
+            if (errorCode === 'auth/user-not-found') {
+                message = 'Usuario no encontrado';
+            } else if (errorCode === 'auth/wrong-password') {
+                message = 'Contraseña incorrecta';
+            }
+            alert(message);
         }
     };
 
@@ -109,21 +104,7 @@ const Login = () => {
                     <Link to="/estado-proyecto">Ver estado de proyecto</Link>
                     <Link to="/reportes">Reportes y Búsqueda</Link>
                 </div>
-
             </Paper>
-
-            {/* Modal para mostrar el resultado del login */}
-            <Dialog open={openModal} onClose={() => setOpenModal(false)}>
-                <DialogTitle>{modalTitle}</DialogTitle>
-                <DialogContent>
-                    <Typography variant="body2">{modalMessage}</Typography>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpenModal(false)} color="primary">
-                        Cerrar
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </Box>
     );
 };

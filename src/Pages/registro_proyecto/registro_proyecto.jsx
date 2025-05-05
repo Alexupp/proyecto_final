@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
 import {
-    TextField,
-    Button,
-    Paper,
-    Typography,
-    Box,
-    Grid
+    TextField, Button, Paper, Typography, Box, Grid
 } from '@mui/material';
 import './registro_proyecto.css';
+import { db } from '../../firebase'; // Asegúrate de que esta ruta esté correcta
+import { collection, addDoc, Timestamp } from 'firebase/firestore';
 
 const RegistroProyecto = () => {
     const [proyecto, setProyecto] = useState({
@@ -20,6 +17,8 @@ const RegistroProyecto = () => {
         observaciones: '',
         integrantes: [{ nombre: '', apellido: '', identificacion: '', grado: '' }],
     });
+
+    const [enviando, setEnviando] = useState(false);
 
     const handleChange = (e) => {
         setProyecto({ ...proyecto, [e.target.name]: e.target.value });
@@ -41,17 +40,51 @@ const RegistroProyecto = () => {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Proyecto registrado:', proyecto);
-        // Aquí puedes enviarlo al backend
+
+        // Validación de presupuesto
+        const presupuestoFloat = parseFloat(proyecto.presupuesto);
+        if (isNaN(presupuestoFloat)) {
+            alert('❌ El presupuesto debe ser un número válido.');
+            return;
+        }
+
+        try {
+            setEnviando(true);
+
+            // Agregar proyecto a Firestore
+            await addDoc(collection(db, "proyectos"), {
+                ...proyecto,
+                presupuesto: presupuestoFloat, // Enviar como número válido
+                fechaRegistro: Timestamp.now()
+            });
+
+            alert('✅ Proyecto registrado correctamente');
+            // Reiniciar formulario
+            setProyecto({
+                titulo: '',
+                area: '',
+                objetivos: '',
+                cronograma: '',
+                presupuesto: '',
+                institucion: '',
+                observaciones: '',
+                integrantes: [{ nombre: '', apellido: '', identificacion: '', grado: '' }],
+            });
+        } catch (error) {
+            console.error("Error al registrar el proyecto:", error);
+            alert('❌ Hubo un error al registrar el proyecto.');
+        } finally {
+            setEnviando(false);
+        }
     };
 
     return (
         <Box className="registro-container">
             <Paper elevation={8} className="registro-box">
                 <Typography variant="h5" gutterBottom>
-                    Registro de Proyecto
+                    📘 Registro de Proyecto Escolar
                 </Typography>
                 <form onSubmit={handleSubmit}>
                     <TextField
@@ -111,6 +144,7 @@ const RegistroProyecto = () => {
                         margin="normal"
                         required
                     />
+
                     <Typography variant="h6" mt={3}>
                         Integrantes del equipo
                     </Typography>
@@ -171,8 +205,15 @@ const RegistroProyecto = () => {
                         multiline
                         margin="normal"
                     />
-                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
-                        Registrar Proyecto
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        sx={{ mt: 3 }}
+                        disabled={enviando}
+                    >
+                        {enviando ? "Registrando..." : "Registrar Proyecto"}
                     </Button>
                 </form>
             </Paper>

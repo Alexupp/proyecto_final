@@ -1,8 +1,59 @@
 .lista-container {
     padding: 30px;
-    background-color: #f5f5f5;
+    background: linear-gradient(to right, #fbe9e7, #ffccbc); /* Gradiente suave de rosa pastel a melocotón */
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
 }
 
 .proyecto-card {
     padding: 16px;
+    border-radius: 12px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.proyecto-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    background-color: #fff3e0; /* Fondo suave de melocotón al hacer hover */
+}
+
+.proyecto-card .MuiCardContent-root {
+    padding: 16px;
+}
+
+.MuiTypography-h6 {
+    font-weight: bold;
+    color: #d32f2f; /* Rojo suave para el título */
+    font-size: 1.1rem;
+    text-transform: capitalize;
+    margin-bottom: 8px;
+}
+
+.MuiTypography-body2 {
+    color: #757575; /* Gris suave para los detalles */
+    font-size: 0.95rem;
+}
+
+.MuiButton-root {
+    background-color: #ff7043; /* Naranja suave */
+    color: white;
+    font-weight: 600;
+    text-transform: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.MuiButton-root:hover {
+    background-color: #f4511e;
+    transform: translateY(-2px); /* Efecto de elevación al pasar el mouse */
+}
+
+.MuiButton-root:active {
+    transform: translateY(2px); /* Efecto de bajada al hacer clic */
 }

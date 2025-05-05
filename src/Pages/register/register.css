@@ -1,35 +1,91 @@
+/* Estilo general del contenedor */
 .register-container {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(to right, #3f51b5, #5a55ae);
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Caja del formulario */
 .register-box {
     padding: 40px;
     width: 100%;
-    max-width: 450px;
-    background-color: #ffffffee;
-    border-radius: 16px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(6px);
+    max-width: 460px;
+    background-color: #fff;
+    border-radius: 32px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+    animation: fadeIn 0.6s ease-out;
 }
 
+/* Botón de registro */
 .register-button {
-    margin-top: 20px;
-    padding: 12px;
+    margin-top: 24px;
+    padding: 14px;
     font-weight: bold;
-    text-transform: none;
+    font-size: 1rem;
+    background: linear-gradient(to right, #6a11cb, #2575fc);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+.register-button:hover {
+    background: linear-gradient(to right, #5b0eb4, #1f63e2);
+    transform: scale(1.02);
+}
+
+/* Footer */
 .register-footer {
-    margin-top: 20px;
-    color: #333;
+    margin-top: 24px;
+    color: #444;
+    text-align: center;
+    font-size: 0.9rem;
 }
 
 .register-footer a {
-    color: #3f51b5;
+    color: #2575fc;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.register-footer a:hover {
+    color: #1a5ed6;
+    text-decoration: underline;
+}
+
+/* Estilo para modal (MUI Dialog) */
+.MuiDialog-paper {
+    border-radius: 16px !important;
+    padding: 10px;
+}
+
+/* Enlace de login */
+.login-link {
+    color: #6a11cb;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.login-link:hover {
+    color: #4c0fa7;
+    text-decoration: underline;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

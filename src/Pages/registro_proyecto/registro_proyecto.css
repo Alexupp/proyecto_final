@@ -1,21 +1,83 @@
+/* Fondo general */
 .registro-container {
     min-height: 100vh;
-    background: linear-gradient(to right, #4a90e2, #5e60ce);
+    background: linear-gradient(to right, #bbdefb, #1e88e5);
+
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 0;
+    padding: 40px 20px;
 }
 
+/* Caja principal */
 .registro-box {
-    background: #fff;
-    padding: 40px;
-    max-width: 900px;
+    background: #ffffff;
+    padding: 50px;
+    max-width: 950px;
     width: 100%;
-    border-radius: 12px;
+    border-radius: 32px; /* 🔁 Antes 16px, ahora más redondeado */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
+/* Título estilizado */
+.registro-box h5 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #1565c0;
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.registro-box h5::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background-color: #64b5f6;
+    margin: 12px auto 0;
+    border-radius: 2px;
+}
+
+/* Inputs */
+.MuiTextField-root {
+    margin-bottom: 20px !important;
+}
+
+/* Sección de integrantes */
 .integrante-box {
+    background-color: #f1f8ff;
+    border-radius: 10px;
+    padding: 16px;
     margin-top: 10px;
     margin-bottom: 10px;
+    border: 1px solid #bbdefb;
+}
+
+/* Botón agregar integrante */
+.MuiButton-outlined {
+    border-color: #64b5f6;
+    color: #1976d2;
+    font-weight: 600;
+    transition: 0.3s ease;
+}
+
+.MuiButton-outlined:hover {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+}
+
+/* Botón registrar */
+.MuiButton-containedPrimary {
+    background-color: #1976d2;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 10px 0;
+    text-transform: none;
+}
+
+.MuiButton-containedPrimary:hover {
+    background-color: #1565c0;
 }

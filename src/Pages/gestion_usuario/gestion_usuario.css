@@ -1,18 +1,128 @@
 .user-management-container {
     padding: 40px;
-    max-width: 1000px;
-    margin: auto;
+    max-width: 1100px;
+    margin: 40px auto; /* Agrega un margen superior para separarlo más */
+    background: linear-gradient(to right, #b2e0b2, #6fe473);
+    border-radius: 16px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
 }
+
 
 .user-table {
-    margin-top: 20px;
-}
-
-.MuiDialog-paper {
-    border-radius: 12px;
+    margin-top: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .MuiTableCell-head {
     font-weight: bold;
-    background-color: #f5f5f5;
+    background-color: #c8facc; /* verde pastel */
+    color: #1b5e20;
+    font-size: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.MuiTableCell-root {
+    font-size: 0.95rem;
+    text-align: center;
+    color: #2e7d32;
+}
+
+.MuiTableBody-root tr:hover {
+    background-color: #d4fbe6; /* verde claro al pasar el mouse */
+}
+
+.MuiIconButton-root {
+    margin: 0 6px;
+    color: #43a047;
+    transition: transform 0.2s ease;
+}
+
+.MuiIconButton-root:hover {
+    transform: scale(1.2);
+    color: #1b5e20;
+}
+
+.MuiDialog-paper {
+    border-radius: 16px;
+    padding: 24px;
+    background-color: #f1fff7;
+}
+
+.MuiDialogTitle-root {
+    font-weight: bold;
+    font-size: 1.3rem;
+    color: #2e7d32;
+    text-align: center;
+}
+
+.MuiTextField-root {
+    margin-bottom: 20px;
+}
+
+.MuiButton-containedPrimary {
+    background-color: #66bb6a;
+    color: white;
+    font-weight: 600;
+    text-transform: none;
+    transition: background-color 0.3s ease;
+}
+
+.MuiButton-containedPrimary:hover {
+    background-color: #43a047;
+}
+
+.MuiButton-root {
+    font-weight: 600;
+    text-transform: none;
+    border-radius: 8px;
+}
+
+.MuiDialogActions-root {
+    justify-content: flex-end;
+    padding: 16px;
+}
+
+.MuiMenuItem-root {
+    font-size: 1rem;
+    color: #2e7d32;
+}
+
+.MuiTableCell-root, .MuiTableHead-root {
+    border: none;
+}
+
+.MuiButton-containedSecondary {
+    background-color: #ef5350;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.MuiButton-containedSecondary:hover {
+    background-color: #c62828;
+}
+
+.titulo-gestion {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2e7d32;
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 10px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.titulo-gestion::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 4px;
+    background-color: #81c784;
+    margin: 8px auto 0;
+    border-radius: 2px;
 }

@@ -1,135 +1,120 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    IconButton,
-    Button,
-    TextField,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    MenuItem,
-    Typography
+    Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+    IconButton, Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle,
+    MenuItem, Typography
 } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
 import './gestion_usuario.css';
+import { Edit, Delete } from '@mui/icons-material';
+import { auth, db } from '../../firebase'; // Asegúrate de que esta ruta sea correcta
+import {
+    createUserWithEmailAndPassword
+} from 'firebase/auth';
+import {
+    collection, getDocs, addDoc, deleteDoc,
+    doc, updateDoc
+} from 'firebase/firestore';
 
 const UserManagement = () => {
-    const [users, setUsers] = useState([]); // Estado para los usuarios
+    const [users, setUsers] = useState([]);
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
-    const [form, setForm] = useState({ _id: null, nombre: '', email: '', tipo: 'estudiante' });
+    const [form, setForm] = useState({
+        id: null,
+        nombre: '',
+        email: '',
+        tipo: 'estudiante',
+        password: ''
+    });
+    const [userToDelete, setUserToDelete] = useState(null); // Para modal de confirmación
 
-    // Cargar los usuarios desde el backend
     const fetchUsers = async () => {
-        try {
-            const response = await fetch('http://localhost:5000/api/users');
-            if (!response.ok) throw new Error('No se pudieron cargar los usuarios');
-            const data = await response.json();
-            setUsers(data);
-        } catch (error) {
-            console.error('Error al obtener los usuarios:', error);
-        }
+        const querySnapshot = await getDocs(collection(db, "usuarios"));
+        const userList = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        setUsers(userList);
     };
 
-
-    // Llamar a la función cuando el componente se monta
     useEffect(() => {
         fetchUsers();
     }, []);
 
-
     const handleOpen = (user = null) => {
         if (user) {
-            setForm(user); // Si se pasa un usuario, configurar el formulario para editar
+            setForm(user);
             setEditMode(true);
         } else {
-            // Resetear el formulario para creación de usuario
-            setForm({ _id: null, nombre: '', email: '', tipo: 'estudiante' });
+            setForm({ id: null, nombre: '', email: '', tipo: 'estudiante', password: '' });
             setEditMode(false);
         }
-        setOpen(true); // Abrir el Dialog
+        setOpen(true);
     };
 
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+        setForm({ id: null, nombre: '', email: '', tipo: 'estudiante', password: '' });
+        setOpen(false);
+        setEditMode(false);
+    };
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
     const handleSave = async () => {
+        const { nombre, email, password, tipo } = form;
+
+        if (!nombre || !email || (!editMode && !password)) {
+            alert("Todos los campos son obligatorios");
+            return;
+        }
+
         try {
             if (editMode) {
-                // Actualizar usuario (PUT)
-                const response = await fetch(`http://localhost:5000/api/users/${form._id}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(form),
-                });
-    
-                if (!response.ok) throw new Error('Error al actualizar el usuario');
-                const updatedUser = await response.json();
-    
-                setUsers(users.map((u) => (u._id === updatedUser._id ? updatedUser : u)));
+                const userRef = doc(db, "usuarios", form.id);
+                await updateDoc(userRef, { nombre, email, tipo });
             } else {
-                // Crear nuevo usuario (POST)
-                const response = await fetch('http://localhost:5000/api/users', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(form),
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const uid = userCredential.user.uid;
+
+                await addDoc(collection(db, "usuarios"), {
+                    uid,
+                    nombre,
+                    email,
+                    tipo
                 });
-    
-                if (!response.ok) throw new Error('Error al crear el usuario');
-                const newUser = await response.json();
-    
-                setUsers([...users, newUser]);
             }
-    
+
+            await fetchUsers();
             handleClose();
         } catch (error) {
-            console.error('Error al guardar usuario:', error);
+            console.error("Error al guardar usuario:", error.message);
+            alert("Error: " + error.message);
         }
     };
-    
 
-    const handleDelete = async (id) => {
+    const confirmDelete = (user) => {
+        setUserToDelete(user);
+    };
+
+    const handleConfirmDelete = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/api/users/${id}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                setUsers(users.filter((u) => u._id !== id)); // Eliminar el usuario del estado
-            } else {
-                const data = await response.json();
-                console.error('Error al eliminar usuario:', data.error || 'Desconocido');
-            }
+            await deleteDoc(doc(db, "usuarios", userToDelete.id));
+            await fetchUsers();
+            setUserToDelete(null);
         } catch (error) {
-            console.error('Error al eliminar el usuario:', error);
+            console.error("Error al eliminar:", error.message);
+            alert("Error al eliminar usuario.");
         }
     };
-    
-    
 
     return (
         <div className="user-management-container">
-            <Typography variant="h4" gutterBottom>
-                Gestión de Usuarios
-            </Typography>
-            <Button variant="contained" color="primary" onClick={() => handleOpen()}>
-                Crear Usuario
-            </Button>
+            <Typography variant="h4" gutterBottom>🌿 Gestión de Usuarios</Typography>
+            <Button variant="contained" onClick={() => handleOpen()}>Crear Usuario</Button>
 
-            <TableContainer component={Paper} className="user-table">
+            <TableContainer component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -141,27 +126,23 @@ const UserManagement = () => {
                     </TableHead>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user._id}>
+                            <TableRow key={user.id}>
                                 <TableCell>{user.nombre}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.tipo}</TableCell>
                                 <TableCell align="right">
-                                    <IconButton onClick={() => handleOpen(user)} color="primary">
-                                        <Edit />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleDelete(user._id)} color="error">
-                                        <Delete />
-                                    </IconButton>
+                                    <IconButton onClick={() => handleOpen(user)}><Edit /></IconButton>
+                                    <IconButton onClick={() => confirmDelete(user)}><Delete color="error" /></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
-
                 </Table>
             </TableContainer>
 
+            {/* Formulario de crear/editar */}
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>{editMode ? 'Editar Usuario' : 'Crear Usuario'}</DialogTitle>
+                <DialogTitle>{editMode ? "Editar Usuario" : "Crear Usuario"}</DialogTitle>
                 <DialogContent>
                     <TextField
                         label="Nombre"
@@ -179,6 +160,17 @@ const UserManagement = () => {
                         fullWidth
                         margin="dense"
                     />
+                    {!editMode && (
+                        <TextField
+                            label="Contraseña"
+                            name="password"
+                            type="password"
+                            value={form.password}
+                            onChange={handleChange}
+                            fullWidth
+                            margin="dense"
+                        />
+                    )}
                     <TextField
                         select
                         label="Tipo"
@@ -195,9 +187,21 @@ const UserManagement = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancelar</Button>
-                    <Button onClick={handleSave} variant="contained" color="primary">
-                        Guardar
-                    </Button>
+                    <Button onClick={handleSave} variant="contained" color="primary">Guardar</Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Modal de confirmación de eliminación */}
+            <Dialog open={!!userToDelete} onClose={() => setUserToDelete(null)}>
+                <DialogTitle>¿Eliminar usuario?</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        ¿Estás seguro de que deseas eliminar a <strong>{userToDelete?.nombre}</strong>?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setUserToDelete(null)}>Cancelar</Button>
+                    <Button onClick={handleConfirmDelete} variant="contained" color="error">Eliminar</Button>
                 </DialogActions>
             </Dialog>
         </div>

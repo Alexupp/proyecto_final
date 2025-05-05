@@ -1,50 +1,92 @@
+/* Contenedor general del login */
 .login-container {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Caja del formulario */
 .login-box {
-    padding: 40px;
+    padding: 48px 40px;
     width: 100%;
-    max-width: 400px;
-    border-radius: 16px;
-    background-color: #ffffffdd;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    background-color: #ffffffcc; /* blanco translúcido */
+    border-radius: 28px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.6s ease-out;
 }
 
+/* Botón de inicio de sesión */
 .login-button {
-    margin-top: 20px;
-    padding: 12px;
+    margin-top: 24px;
+    padding: 14px;
     font-weight: bold;
-    text-transform: none;
+    font-size: 1rem;
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
+.login-button:hover {
+    background: linear-gradient(to right, #5a66d6, #6a3e9a);
+    transform: scale(1.02);
+}
+
+/* Footer del login */
 .login-footer {
     margin-top: 20px;
-    color: #333;
+    color: #444;
+    text-align: center;
+    font-size: 0.9rem;
 }
 
 .login-footer a {
-    color: #3f51b5;
+    color: #6a11cb;
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
-
-/* temporal links */
-.link-container a {
-    display: block;
-    margin-bottom: 10px;
-    color: #1976d2;
-    text-decoration: none;
-}
-
-.link-container a:hover {
+.login-footer a:hover {
+    color: #4a0fa0;
     text-decoration: underline;
 }
 
-/* final temporal links */
+/* Enlaces temporales */
+.link-container {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.link-container a {
+    display: block;
+    margin-bottom: 8px;
+    color: #2575fc;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.link-container a:hover {
+    color: #174dc9;
+    text-decoration: underline;
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
