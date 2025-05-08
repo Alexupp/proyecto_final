@@ -6,14 +6,12 @@ import {
 } from '@mui/material';
 import './gestion_usuario.css';
 import { Edit, Delete } from '@mui/icons-material';
-import { auth, db } from '../../firebase'; // Asegúrate de que esta ruta sea correcta
+import { auth, db } from '../../firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import {
-    createUserWithEmailAndPassword
-} from 'firebase/auth';
-import {
-    collection, getDocs, addDoc, deleteDoc,
-    doc, updateDoc
+    collection, getDocs, deleteDoc, doc, updateDoc, setDoc
 } from 'firebase/firestore';
+
 
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
@@ -26,15 +24,20 @@ const UserManagement = () => {
         tipo: 'estudiante',
         password: ''
     });
-    const [userToDelete, setUserToDelete] = useState(null); // Para modal de confirmación
+    const [userToDelete, setUserToDelete] = useState(null);
+    const [error, setError] = useState('');
 
     const fetchUsers = async () => {
-        const querySnapshot = await getDocs(collection(db, "usuarios"));
-        const userList = querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        }));
-        setUsers(userList);
+        try {
+            const querySnapshot = await getDocs(collection(db, "usuarios"));
+            const userList = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setUsers(userList);
+        } catch (e) {
+            setError("Error al obtener usuarios: " + e.message);
+        }
     };
 
     useEffect(() => {
@@ -56,6 +59,7 @@ const UserManagement = () => {
         setForm({ id: null, nombre: '', email: '', tipo: 'estudiante', password: '' });
         setOpen(false);
         setEditMode(false);
+        setError('');
     };
 
     const handleChange = (e) => {
@@ -66,7 +70,7 @@ const UserManagement = () => {
         const { nombre, email, password, tipo } = form;
 
         if (!nombre || !email || (!editMode && !password)) {
-            alert("Todos los campos son obligatorios");
+            setError("Todos los campos son obligatorios.");
             return;
         }
 
@@ -78,8 +82,8 @@ const UserManagement = () => {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const uid = userCredential.user.uid;
 
-                await addDoc(collection(db, "usuarios"), {
-                    uid,
+                await setDoc(doc(db, "usuarios", uid), {
+                    uid, // agregar esta línea
                     nombre,
                     email,
                     tipo
@@ -90,7 +94,7 @@ const UserManagement = () => {
             handleClose();
         } catch (error) {
             console.error("Error al guardar usuario:", error.message);
-            alert("Error: " + error.message);
+            setError("Error al guardar usuario: " + error.message);
         }
     };
 
@@ -100,13 +104,22 @@ const UserManagement = () => {
 
     const handleConfirmDelete = async () => {
         try {
+            // Primero elimina en Authentication
+            const eliminarUsuarioAuth = httpsCallable(functions, 'eliminarUsuarioAuth');
+            await eliminarUsuarioAuth({ uid: userToDelete.uid });
+    
+            // Luego elimina de Firestore
             await deleteDoc(doc(db, "usuarios", userToDelete.id));
             await fetchUsers();
             setUserToDelete(null);
         } catch (error) {
-            console.error("Error al eliminar:", error.message);
-            alert("Error al eliminar usuario.");
+            console.error("Error al eliminar usuario:", error.message);
+            setError("Error al eliminar usuario: " + error.message);
         }
+    };
+
+    const handleCloseError = () => {
+        setError('');
     };
 
     return (
@@ -114,7 +127,7 @@ const UserManagement = () => {
             <Typography variant="h4" gutterBottom>🌿 Gestión de Usuarios</Typography>
             <Button variant="contained" onClick={() => handleOpen()}>Crear Usuario</Button>
 
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} className="user-table">
                 <Table>
                     <TableHead>
                         <TableRow>
@@ -140,7 +153,6 @@ const UserManagement = () => {
                 </Table>
             </TableContainer>
 
-            {/* Formulario de crear/editar */}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{editMode ? "Editar Usuario" : "Crear Usuario"}</DialogTitle>
                 <DialogContent>
@@ -191,7 +203,6 @@ const UserManagement = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Modal de confirmación de eliminación */}
             <Dialog open={!!userToDelete} onClose={() => setUserToDelete(null)}>
                 <DialogTitle>¿Eliminar usuario?</DialogTitle>
                 <DialogContent>
@@ -202,6 +213,16 @@ const UserManagement = () => {
                 <DialogActions>
                     <Button onClick={() => setUserToDelete(null)}>Cancelar</Button>
                     <Button onClick={handleConfirmDelete} variant="contained" color="error">Eliminar</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={!!error} onClose={handleCloseError}>
+                <DialogTitle>Error</DialogTitle>
+                <DialogContent>
+                    <Typography>{error}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseError} autoFocus>Aceptar</Button>
                 </DialogActions>
             </Dialog>
         </div>

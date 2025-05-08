@@ -1,12 +1,23 @@
+/* Contenedor principal */
 .lista-container {
     padding: 30px;
-    background: linear-gradient(to right, #fbe9e7, #ffccbc); /* Gradiente suave de rosa pastel a melocotón */
     max-width: 1200px;
     margin: 0 auto;
     border-radius: 16px;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #b2e0b2, #6fe473);
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
 }
 
+/* Grid para organizar las tarjetas */
+.proyectos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 20px;
+}
+
+/* Tarjeta de proyecto */
 .proyecto-card {
     padding: 16px;
     border-radius: 12px;
@@ -17,43 +28,57 @@
 
 .proyecto-card:hover {
     transform: scale(1.03);
+    background-color: #d4fbe6;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
-    background-color: #fff3e0; /* Fondo suave de melocotón al hacer hover */
 }
 
+/* Contenido de la tarjeta */
 .proyecto-card .MuiCardContent-root {
     padding: 16px;
 }
 
-.MuiTypography-h6 {
-    font-weight: bold;
-    color: #d32f2f; /* Rojo suave para el título */
-    font-size: 1.1rem;
+/* Título del proyecto resaltado */
+.titulo-proyecto {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #1b5e20;
     text-transform: capitalize;
     margin-bottom: 8px;
 }
 
+/* Detalles del proyecto */
 .MuiTypography-body2 {
-    color: #757575; /* Gris suave para los detalles */
     font-size: 0.95rem;
+    color: #4e944f;
 }
 
-.MuiButton-root {
-    background-color: #ff7043; /* Naranja suave */
+/* Etiquetas resaltadas */
+.resaltado {
+    font-weight: bold;
+    color: #1b5e20;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botón verde personalizado */
+.boton-verde {
+    background-color: #69b578;
     color: white;
-    font-weight: 600;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 12px;
     text-transform: none;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    border-radius: 8px;
-    padding: 8px 16px;
-    font-size: 0.9rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
 }
 
-.MuiButton-root:hover {
-    background-color: #f4511e;
-    transform: translateY(-2px); /* Efecto de elevación al pasar el mouse */
+.boton-verde:hover {
+    background-color: #57a263;
+    transform: translateY(-2px);
 }
 
-.MuiButton-root:active {
-    transform: translateY(2px); /* Efecto de bajada al hacer clic */
+.boton-verde:active {
+    transform: translateY(1px);
 }

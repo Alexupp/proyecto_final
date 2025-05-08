@@ -1,0 +1,200 @@
+:root {
+    --primary-color: #4caf50;
+    --primary-dark: #388e3c;
+    --bg-color: #f7fafc;
+    --white: #ffffff;
+    --text-dark: #4a4a4a;
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --border-radius: 16px;
+    --transition: all 0.3s ease-in-out;
+    --font-family: 'Poppins', sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+.inicio-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--bg-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+}
+
+.inicio-content {
+    flex: 1;
+    padding: 3rem 2rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.inicio-header {
+    background-color: var(--primary-color);
+    color: var(--white);
+    padding: 3rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    transition: var(--transition);
+}
+
+.inicio-header h1 {
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.inicio-header p {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+/* Secciones */
+.inicio-main {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+section {
+    background-color: var(--white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    border-left: 6px solid var(--primary-color);
+    opacity: 0.95;
+}
+
+section:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    opacity: 1;
+}
+
+/* Sección Link Oficial */
+.link-oficial {
+    display: inline-block;
+    margin-top: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.link-oficial:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+    transform: scale(1.05);
+}
+
+/* Imagen destacada */
+.section-image {
+    width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease;
+}
+
+.section-image:hover {
+    opacity: 0.9;
+    transform: scale(1.02)
+}
+
+
+/* Objetivos */
+.objetivos-section ul {
+    padding-left: 2rem;
+    list-style: none;
+    margin: 2rem 0;
+    font-size: 1.1rem;
+}
+
+.objetivos-section li {
+    margin-bottom: 1.2rem;
+    font-size: 1.1rem;
+    position: relative;
+    padding-left: 30px;
+    line-height: 1.6;
+}
+
+.objetivos-section li::before {
+    content: "✅";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 1.4rem;
+    color: var(--primary-color);
+    line-height: 1.6;
+}
+
+
+/* Beneficios */
+.beneficios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.beneficio-card {
+    background-color: rgba(76, 175, 80, 0.1);
+    border-left: 6px solid var(--primary-color);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    opacity: 0.95;
+}
+
+.beneficio-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-5px);
+    opacity: 1;
+}
+
+.beneficio-card h3 {
+    margin-top: 0;
+    color: var(--primary-dark);
+    margin-bottom: 0.75rem;
+    font-size: 1.4rem;
+}
+
+.beneficio-card p {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.beneficio-card img {
+    width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.beneficio-card img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+

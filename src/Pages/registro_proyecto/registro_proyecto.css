@@ -1,7 +1,7 @@
 /* Fondo general */
 .registro-container {
     min-height: 100vh;
-    background: linear-gradient(to right, #bbdefb, #1e88e5);
+    background: linear-gradient(to right, #bbdefb, #1565c0);
 
     display: flex;
     align-items: center;
@@ -15,7 +15,7 @@
     padding: 50px;
     max-width: 950px;
     width: 100%;
-    border-radius: 32px; /* 🔁 Antes 16px, ahora más redondeado */
+    border-radius: 32px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     position: relative;
 }
@@ -41,19 +41,18 @@
     border-radius: 2px;
 }
 
-/* Inputs */
-.MuiTextField-root {
-    margin-bottom: 20px !important;
+/* Botón de Registrar Proyecto */
+.registro-btn {
+    background-color: #1976d2;
+    color: white;
+    font-weight: 600;
+    text-transform: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
 }
 
-/* Sección de integrantes */
-.integrante-box {
-    background-color: #f1f8ff;
-    border-radius: 10px;
-    padding: 16px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #bbdefb;
+.registro-btn:hover {
+    background-color: #1565c0;
 }
 
 /* Botón agregar integrante */
@@ -69,15 +68,43 @@
     border-color: #2196f3;
 }
 
-/* Botón registrar */
-.MuiButton-containedPrimary {
+/* Botón de agregar integrante */
+.agregar-integrante-btn {
     background-color: #1976d2;
+    color: white;
     font-weight: 600;
-    font-size: 1rem;
     padding: 10px 0;
     text-transform: none;
+    border: none;
+    width: 100%;
 }
 
-.MuiButton-containedPrimary:hover {
+.agregar-integrante-btn:hover {
     background-color: #1565c0;
 }
+
+/* Botón de Registrar Proyecto */
+.registro-container .registro-btn {
+    background-color: #1976d2;
+    color: white;
+    font-weight: 600;
+    text-transform: none;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+}
+
+.registro-container .registro-btn:hover {
+    background-color: #1565c0;
+}
+
+/* Aumentar la especificidad del selector */
+div .integrantes-titulo {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1565c0;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', sans-serif;
+    letter-spacing: 0.5px;
+}
+

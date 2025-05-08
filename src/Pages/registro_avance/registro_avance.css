@@ -1,6 +1,6 @@
 .avance-container {
     min-height: 100vh;
-    background: linear-gradient(to right, #fff8e1, #ffe082); /* De amarillo muy claro a suave dorado */
+    background: linear-gradient(to right, #4caf50, #b7dabb); /* De verde principal a verde claro */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -9,17 +9,17 @@
 }
 
 .avance-box {
-    background: #fffef5;
+    background: rgba(255, 255, 255, 0.95); /* Blanco translúcido */
     padding: 48px;
     max-width: 750px;
     width: 100%;
-    border-radius: 28px; /* Bordes más redondeados */
+    border-radius: 28px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-.avance-box h5, 
+.avance-box h5,
 .avance-box .MuiTypography-h5 {
-    color: #f9a825; /* Amarillo fuerte para resaltar el título */
+    color: #4caf50; /* Verde principal para el título */
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
@@ -31,16 +31,16 @@ input[type="file"] {
 }
 
 .MuiInputLabel-root {
-    color: #795548;
+    color: #4a4a4a; /* Texto oscuro */
     font-weight: 500;
 }
 
 .MuiTextField-root {
-        border-radius: 6px;
+    border-radius: 6px;
 }
 
 .MuiButton-containedPrimary {
-    background-color: #fbc02d;
+    background-color: #4caf50;
     color: white;
     font-weight: 600;
     border-radius: 10px;
@@ -49,7 +49,7 @@ input[type="file"] {
 }
 
 .MuiButton-containedPrimary:hover {
-    background-color: #f9a825;
+    background-color: #388e3c;
 }
 
 .MuiGrid-item {
@@ -57,24 +57,24 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-    background-color: #fbc02d; /* Color amarillo como el botón principal */
+    background-color: #4caf50;
     color: white;
-    padding: 8px 16px; /* Menor espacio alrededor del texto */
-    border-radius: 6px; /* Bordes más sutiles */
+    padding: 8px 16px;
+    border-radius: 6px;
     font-weight: 600;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.2s ease;
     display: inline-block;
     font-family: 'Segoe UI', sans-serif;
-    font-size: 14px; /* Tamaño de fuente más pequeño */
+    font-size: 14px;
 }
 
 .custom-file-upload:hover {
-    background-color: #f9a825;
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño en hover */
+    background-color: #388e3c;
+    transform: scale(1.05);
 }
 
 .custom-file-upload:active {
-    background-color: #f57f17; /* Color al hacer clic */
+    background-color: #2e7d32;
 }

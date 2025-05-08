@@ -12,11 +12,13 @@ import {
     TableRow,
     TableCell,
     TableBody,
+    InputLabel,
+    FormControl
 } from '@mui/material';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase'; // Ajusta la ruta según tu estructura
+import { db } from '../../firebase';
 import './reporte.css';
 
 const VistaReportes = () => {
@@ -24,14 +26,15 @@ const VistaReportes = () => {
     const [institucion, setInstitucion] = useState('');
     const [docente, setDocente] = useState('');
     const [estado, setEstado] = useState('');
+    const [proyectos, setProyectos] = useState([]);
     const [resultados, setResultados] = useState([]);
 
-    // Fetch proyectos desde Firestore
     const fetchProyectos = async () => {
         try {
-            const proyectosSnapshot = await getDocs(collection(db, "proyectos"));
-            const proyectosList = proyectosSnapshot.docs.map(doc => doc.data());
-            setResultados(proyectosList);
+            const snapshot = await getDocs(collection(db, 'proyectos'));
+            const lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setProyectos(lista);
+            setResultados(lista);
         } catch (error) {
             console.error("Error al obtener proyectos:", error);
         }
@@ -42,9 +45,9 @@ const VistaReportes = () => {
     }, []);
 
     const handleBuscar = () => {
-        const filtrados = proyectosMock.filter((p) => {
+        const filtrados = proyectos.filter((p) => {
             return (
-                (!titulo || p.titulo.toLowerCase().includes(titulo.toLowerCase())) &&
+                (!titulo || p.titulo?.toLowerCase().includes(titulo.toLowerCase())) &&
                 (!institucion || p.institucion === institucion) &&
                 (!docente || p.docente === docente) &&
                 (!estado || p.estado === estado)
@@ -58,8 +61,8 @@ const VistaReportes = () => {
         doc.text('Reporte de Proyectos', 14, 15);
 
         autoTable(doc, {
-            head: [['ID', 'Título', 'Institución', 'Docente', 'Estado']],
-            body: resultados.map(p => [p.id, p.titulo, p.institucion, p.docente, p.estado]),
+            head: [['Título', 'Institución', 'Docente', 'Estado']],
+            body: resultados.map(p => [p.titulo, p.institucion, p.docente, p.estado]),
             startY: 20,
         });
 
@@ -69,8 +72,8 @@ const VistaReportes = () => {
     return (
         <Box className="reportes-container">
             <Paper elevation={6} className="reportes-box">
-                <Typography variant="h5" gutterBottom>
-                    Reportes y Búsqueda de Proyectos
+                <Typography variant="h5" gutterBottom className="titulo-reportes">
+                    📊 Reportes y Búsqueda de Proyectos
                 </Typography>
 
                 <Box className="filtros">
@@ -82,52 +85,60 @@ const VistaReportes = () => {
                         margin="normal"
                     />
 
-                    <Select
-                        value={institucion}
-                        onChange={(e) => setInstitucion(e.target.value)}
-                        displayEmpty
-                        fullWidth
-                        margin="dense"
-                    >
-                        <MenuItem value="">Todas las instituciones</MenuItem>
-                        <MenuItem value="Institución 1">Institución 1</MenuItem>
-                        <MenuItem value="Institución 2">Institución 2</MenuItem>
-                    </Select>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Institución</InputLabel>
+                        <Select
+                            value={institucion}
+                            onChange={(e) => setInstitucion(e.target.value)}
+                            label="Institución"
+                        >
+                            <MenuItem value="">Todas las instituciones</MenuItem>
+                            <MenuItem value="Universidad de la Amazonia">Universidad de la Amazonia</MenuItem>
+                            <MenuItem value="Normal Superior">Normal Superior</MenuItem>
+                            <MenuItem value="Juan Bautista La Salle">Juan Bautista La Salle</MenuItem>
+                            <MenuItem value="Sagrados Corazones">Sagrados Corazones</MenuItem>
+                            <MenuItem value="Juan Bautista Migani">Juan Bautista Migani</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                    <Select
-                        value={docente}
-                        onChange={(e) => setDocente(e.target.value)}
-                        displayEmpty
-                        fullWidth
-                        margin="dense"
-                    >
-                        <MenuItem value="">Todos los docentes</MenuItem>
-                        <MenuItem value="Prof. Juan Pérez">Prof. Juan Pérez</MenuItem>
-                        <MenuItem value="Dra. Ana Ruiz">Dra. Ana Ruiz</MenuItem>
-                    </Select>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Docente</InputLabel>
+                        <Select
+                            value={docente}
+                            onChange={(e) => setDocente(e.target.value)}
+                            label="Docente"
+                        >
+                            <MenuItem value="">Todos los docentes</MenuItem>
+                            <MenuItem value="Denis Lorena Álvarez Guayara">Denis Lorena Álvarez Guayara</MenuItem>
+                            <MenuItem value="Christian Andrés Arteaga Rojas">Christian Andrés Arteaga Rojas</MenuItem>
+                            <MenuItem value="Wilmer Arley Patiño Perdomo">Wilmer Arley Patiño Perdomo</MenuItem>
+                            <MenuItem value="Jesús Emilio Pinto Lopera">Jesús Emilio Pinto Lopera</MenuItem>
+                            <MenuItem value="Edwin Eduardo Millán Rojas">Edwin Eduardo Millán Rojas</MenuItem>
+                        </Select>
+                    </FormControl>
 
-                    <Select
-                        value={estado}
-                        onChange={(e) => setEstado(e.target.value)}
-                        displayEmpty
-                        fullWidth
-                        margin="dense"
-                    >
-                        <MenuItem value="">Todos los estados</MenuItem>
-                        <MenuItem value="Activo">Activo</MenuItem>
-                        <MenuItem value="Finalizado">Finalizado</MenuItem>
-                        <MenuItem value="En evaluación">En evaluación</MenuItem>
-                    </Select>
+                    <FormControl fullWidth margin="normal">
+                        <InputLabel>Estado</InputLabel>
+                        <Select
+                            value={estado}
+                            onChange={(e) => setEstado(e.target.value)}
+                            label="Estado"
+                        >
+                            <MenuItem value="">Todos los estados</MenuItem>
+                            <MenuItem value="Activo">Activo</MenuItem>
+                            <MenuItem value="En evaluación">En evaluación</MenuItem>
+                            <MenuItem value="Finalizado">Finalizado</MenuItem>
+                        </Select>
+                    </FormControl>
 
                     <Button variant="contained" onClick={handleBuscar} sx={{ mt: 2 }}>
                         Buscar
                     </Button>
                 </Box>
 
-                <Table className="tabla-proyectos" sx={{ mt: 4 }}>
+                <Table className="tabla-proyectos">
                     <TableHead>
                         <TableRow>
-                            <TableCell>ID</TableCell>
                             <TableCell>Título</TableCell>
                             <TableCell>Institución</TableCell>
                             <TableCell>Docente</TableCell>
@@ -137,7 +148,6 @@ const VistaReportes = () => {
                     <TableBody>
                         {resultados.map((p) => (
                             <TableRow key={p.id}>
-                                <TableCell>{p.id}</TableCell>
                                 <TableCell>{p.titulo}</TableCell>
                                 <TableCell>{p.institucion}</TableCell>
                                 <TableCell>{p.docente}</TableCell>
@@ -150,7 +160,8 @@ const VistaReportes = () => {
                 <Button
                     variant="outlined"
                     onClick={generarPDF}
-                    sx={{ marginTop: '20px' }}
+                    sx={{ mt: 3 }}
+                    disabled={resultados.length === 0}
                 >
                     Exportar PDF
                 </Button>

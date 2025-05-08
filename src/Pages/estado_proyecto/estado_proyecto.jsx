@@ -13,6 +13,14 @@ import {
 } from '@mui/material';
 import './estado_proyecto.css';
 
+// Datos de los proyectos disponibles
+const ProyectosDisponibles = [
+    'Proyecto 1',
+    'Proyecto 2',
+    'Proyecto 3',
+    'Proyecto 4',
+];
+
 const EstadosDisponibles = [
     'Formulación',
     'Evaluación',
@@ -22,6 +30,7 @@ const EstadosDisponibles = [
 ];
 
 const EstadoProyecto = () => {
+    const [proyectoSeleccionado, setProyectoSeleccionado] = useState(ProyectosDisponibles[0]);
     const [estadoActual, setEstadoActual] = useState('Formulación');
     const [observacion, setObservacion] = useState('');
     const [historial, setHistorial] = useState([
@@ -29,6 +38,7 @@ const EstadoProyecto = () => {
             fecha: new Date().toLocaleString(),
             estado: 'Formulación',
             observacion: 'Inicio del proyecto',
+            proyecto: 'Proyecto 1',
         },
     ]);
 
@@ -41,6 +51,7 @@ const EstadoProyecto = () => {
                 fecha: new Date().toLocaleString(),
                 estado: estadoActual,
                 observacion,
+                proyecto: proyectoSeleccionado,
             },
         ];
         setHistorial(nuevoHistorial);
@@ -55,6 +66,23 @@ const EstadoProyecto = () => {
                 </Typography>
 
                 <Typography variant="body1" sx={{ mb: 2 }}>
+                    Proyecto seleccionado: <strong>{proyectoSeleccionado}</strong>
+                </Typography>
+
+                <Select
+                    value={proyectoSeleccionado}
+                    onChange={(e) => setProyectoSeleccionado(e.target.value)}
+                    fullWidth
+                    sx={{ mb: 2 }}
+                >
+                    {ProyectosDisponibles.map((proyecto) => (
+                        <MenuItem key={proyecto} value={proyecto}>
+                            {proyecto}
+                        </MenuItem>
+                    ))}
+                </Select>
+
+                <Typography variant="body1" sx={{ mb: 2 }}>
                     Estado actual: <strong>{estadoActual}</strong>
                 </Typography>
 
@@ -62,6 +90,7 @@ const EstadoProyecto = () => {
                     value={estadoActual}
                     onChange={(e) => setEstadoActual(e.target.value)}
                     fullWidth
+                    sx={{ mb: 2 }}
                 >
                     {EstadosDisponibles.map((estado) => (
                         <MenuItem key={estado} value={estado}>
@@ -98,7 +127,7 @@ const EstadoProyecto = () => {
                     {historial.map((item, index) => (
                         <ListItem key={index} className="historial-item">
                             <ListItemText
-                                primary={`Estado: ${item.estado} - ${item.fecha}`}
+                                primary={`Proyecto: ${item.proyecto} - Estado: ${item.estado} - ${item.fecha}`}
                                 secondary={`Observación: ${item.observacion}`}
                             />
                         </ListItem>

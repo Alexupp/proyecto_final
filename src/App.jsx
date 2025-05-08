@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Pages/login/login';
 import Register from './Pages/register/register';
 import UserManagement from './Pages/gestion_usuario/gestion_usuario';
@@ -8,12 +8,15 @@ import ListaProyectos from './Pages/lista_proyecto/lista_proyecto';
 import DetalleProyecto from './Pages/detalle_proyecto/detalle_proyecto';
 import EstadoProyecto from './Pages/estado_proyecto/estado_proyecto';
 import VistaReportes from './Pages/reporte/reporte';
+import Inicio from './Pages/inicio/inicio';
 
 function App() {
   return (
     <Router>
       <Routes>
-      <Route path="/" element={<Login />} />
+        <Route path="/" element={<Navigate to="/inicio" />} />
+        
+        <Route path="/inicio" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/gestion-usuarios" element={<UserManagement />} />

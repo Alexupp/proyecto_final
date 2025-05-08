@@ -4,7 +4,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+    background: linear-gradient(135deg, #4caf50 0%, #ffffff 100%); /* Degradado de verde a blanco */
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -13,7 +13,7 @@
     padding: 40px;
     width: 100%;
     max-width: 460px;
-    background-color: #fff;
+    background-color: rgba(255, 255, 255, 0.9); /* Blanco translúcido */
     border-radius: 32px;
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease;
@@ -26,7 +26,7 @@
     padding: 14px;
     font-weight: bold;
     font-size: 1rem;
-    background: linear-gradient(to right, #6a11cb, #2575fc);
+    background: linear-gradient(to right, #4caf50, #388e3c); /* Degradado verde */
     color: white;
     border: none;
     border-radius: 8px;
@@ -35,27 +35,27 @@
 }
 
 .register-button:hover {
-    background: linear-gradient(to right, #5b0eb4, #1f63e2);
+    background: linear-gradient(to right, #388e3c, #4caf50); /* Degradado verde invertido */
     transform: scale(1.02);
 }
 
 /* Footer */
 .register-footer {
     margin-top: 24px;
-    color: #444;
+    color: #4a4a4a; /* Texto oscuro */
     text-align: center;
     font-size: 0.9rem;
 }
 
 .register-footer a {
-    color: #2575fc;
+    color: #388e3c; /* Verde oscuro */
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s ease;
 }
 
 .register-footer a:hover {
-    color: #1a5ed6;
+    color: #2e7d32; /* Tono más oscuro de verde */
     text-decoration: underline;
 }
 
@@ -67,14 +67,14 @@
 
 /* Enlace de login */
 .login-link {
-    color: #6a11cb;
+    color: #4caf50; /* Verde principal */
     font-weight: 600;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 .login-link:hover {
-    color: #4c0fa7;
+    color: #388e3c; /* Verde oscuro */
     text-decoration: underline;
 }
 

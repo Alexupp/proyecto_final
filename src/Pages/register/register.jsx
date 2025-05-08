@@ -59,6 +59,9 @@ const Register = () => {
             let message = '';
             switch (error.code) {
                 case 'auth/email-already-in-use':
+                    message = 'El correo ya está en uso. Si fue eliminado anteriormente, contacta al administrador para reactivarlo.';
+                    break;
+                case 'auth/email-already-in-use':
                     message = 'El correo ya está en uso.';
                     break;
                 case 'auth/invalid-email':
@@ -139,7 +142,7 @@ const Register = () => {
 
                 <Typography variant="body2" align="center" className="register-footer">
                     ¿Ya tienes cuenta?{' '}
-                    <Link href="/" underline="hover" className="login-link">
+                    <Link href="/login" underline="hover" className="login-link">
                         Inicia sesión
                     </Link>
                 </Typography>

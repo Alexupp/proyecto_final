@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
-    TextField, Button, Paper, Typography, Box
+    TextField, Button, Paper, Typography, Box,
+    Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import './login.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -11,47 +12,62 @@ import { auth, db } from '../../firebase';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [openError, setOpenError] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
+    
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
-
-            // Obtener documento del usuario en Firestore
+    
             const userDocRef = doc(db, 'usuarios', user.uid);
             const userDocSnap = await getDoc(userDocRef);
-
+    
             if (userDocSnap.exists()) {
                 const userData = userDocSnap.data();
-
-                // Redirigir según tipo de usuario
+    
                 setTimeout(() => {
                     if (userData.tipo === 'estudiante') {
-                        navigate('/registro-proyecto'); // Redirigir a la página de estudiante
+                        navigate('/inicio');
                     } else if (userData.tipo === 'docente') {
-                        navigate('/proyectos'); // Redirigir a la página de docente
+                        navigate('/proyectos');
                     } else if (userData.tipo === 'coordinador') {
-                        navigate('/gestion-usuarios'); // Redirigir a la página de coordinador
+                        navigate('/inicio');
                     } else {
-                        navigate('/'); // Página principal por defecto
+                        navigate('/inicio'); 
                     }
-                }, 2000);
+                }, 1000);
             } else {
-                alert('No se encontró el perfil del usuario.');
+                showError('No se encontró el perfil del usuario.');
             }
         } catch (error) {
             const errorCode = error.code;
             let message = 'Ocurrió un error';
+    
             if (errorCode === 'auth/user-not-found') {
                 message = 'Usuario no encontrado';
             } else if (errorCode === 'auth/wrong-password') {
                 message = 'Contraseña incorrecta';
+            } else if (errorCode === 'auth/invalid-email') {
+                message = 'Correo electrónico inválido';
             }
-            alert(message);
+    
+            showError(message);
         }
+    };
+    
+
+    const showError = (msg) => {
+        setError(msg);
+        setOpenError(true);
+    };
+
+    const handleCloseError = () => {
+        setOpenError(false);
+        setError('');
     };
 
     return (
@@ -105,6 +121,17 @@ const Login = () => {
                     <Link to="/reportes">Reportes y Búsqueda</Link>
                 </div>
             </Paper>
+
+            {/* Modal de error */}
+            <Dialog open={openError} onClose={handleCloseError}>
+                <DialogTitle>Error al iniciar sesión</DialogTitle>
+                <DialogContent>
+                    <Typography>{error}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseError} autoFocus>Aceptar</Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

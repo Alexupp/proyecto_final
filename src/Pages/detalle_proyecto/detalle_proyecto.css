@@ -1,19 +1,128 @@
 .detalle-container {
-    padding: 40px;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
+    background: linear-gradient(to bottom right, #e0f7fa, #f1f8e9); /* Fondo suave de gradiente */
+    padding: 40px 20px;
+    font-family: 'Roboto', sans-serif; /* Fuente moderna */
 }
 
 .detalle-box {
-    background: white;
-    padding: 30px;
-    max-width: 700px;
+    max-width: 900px;
     width: 100%;
-    border-radius: 10px;
+    padding: 40px;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.imagen-box img {
-    max-width: 100%;
-    height: auto;
-    margin-top: 10px;
+.detalle-box:hover {
+    transform: translateY(-5px); /* Efecto de desplazamiento */
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15); /* Sombra más fuerte al hacer hover */
+}
+
+.detalle-box .titulo {
+    font-size: 2.5rem; /* Títulos más grandes */
+    font-weight: 700;
+    color: #388e3c; /* Verde oscuro */
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative;
+    padding-bottom: 12px;
+    text-transform: uppercase; /* Títulos en mayúsculas */
+    letter-spacing: 1px; /* Espaciado de letras */
+    font-family: 'Montserrat', sans-serif; /* Fuente moderna para el título */
+}
+
+.detalle-box .titulo::after {
+    content: '';
+    display: block;
+    width: 70px;
+    height: 5px;
+    background-color: #81c784; /* Verde claro */
+    margin: 10px auto 0;
+    border-radius: 3px; /* Bordes redondeados */
+}
+
+.detalle-box .descripcion {
+    font-size: 1.2rem;
+    color: #333; /* Color de texto oscuro para una mejor legibilidad */
+    line-height: 1.8;
+    margin-bottom: 25px;
+    padding: 15px;
+    background-color: #f7f7f7; /* Fondo suave para la descripción */
+    border-left: 6px solid #388e3c; /* Borde izquierdo verde brillante */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); /* Sombra sutil para la caja */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+.detalle-box .imagen-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.detalle-box .imagen-box .imagen {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detalle-box .imagen-box .imagen:hover {
+    transform: scale(1.05); /* Efecto de escala al hacer hover */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Sombra más fuerte */
+}
+
+.detalle-box .acciones {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.detalle-box .acciones .boton {
+    background-color: #66bb6a; /* Verde brillante */
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.detalle-box .acciones .boton:hover {
+    background-color: #388e3c; /* Verde más oscuro */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.detalle-box .acciones .boton-secundario {
+    background-color: #ef5350; /* Rojo suave */
+    color: white;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.detalle-box .acciones .boton-secundario:hover {
+    background-color: #d32f2f; /* Rojo más intenso */
+    transform: scale(1.05); /* Efecto de agrandamiento */
+}
+
+.detalle-box .acciones .boton-secundario:active {
+    transform: scale(0.98); /* Efecto de reducción al hacer clic */
 }

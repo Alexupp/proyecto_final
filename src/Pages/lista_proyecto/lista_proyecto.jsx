@@ -1,47 +1,74 @@
-import React from 'react';
-import { Card, CardContent, Typography, Grid, Button } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import {
+    Card,
+    CardContent,
+    Typography,
+    Button,
+    CircularProgress,
+    Box
+} from '@mui/material';
 import { Link } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
 import './lista_proyecto.css';
 
-const proyectosMock = [
-    {
-        id: 1,
-        titulo: 'Sistema de Gestión Escolar',
-        area: 'Educación',
-        institucion: 'Colegio Central',
-    },
-    {
-        id: 2,
-        titulo: 'App de Reciclaje',
-        area: 'Medio Ambiente',
-        institucion: 'Escuela Verde',
-    },
-];
-
 const ListaProyectos = () => {
+    const [proyectos, setProyectos] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchProyectos = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, 'proyectos'));
+                const lista = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setProyectos(lista);
+            } catch (error) {
+                console.error('Error al obtener proyectos:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProyectos();
+    }, []);
+
     return (
         <div className="lista-container">
-            <Typography variant="h4" gutterBottom>
-                Lista de Proyectos
+            <Typography variant="h4" gutterBottom className="titulo-lista">
+                📚 Lista de Proyectos
             </Typography>
-            <Grid container spacing={3}>
-                {proyectosMock.map((proyecto) => (
-                    <Grid item xs={12} sm={6} md={4} key={proyecto.id}>
-                        <Card className="proyecto-card">
+
+            {loading ? (
+                <Box display="flex" justifyContent="center" mt={4}>
+                    <CircularProgress />
+                </Box>
+            ) : (
+                <div className="proyectos-grid">
+                    {proyectos.map((proyecto) => (
+                        <div className="proyecto-card" key={proyecto.id}>
                             <CardContent>
-                                <Typography variant="h6">{proyecto.titulo}</Typography>
-                                <Typography variant="body2">Área: {proyecto.area}</Typography>
-                                <Typography variant="body2">Institución: {proyecto.institucion}</Typography>
-                                <Link to={`/proyecto/${proyecto.id}`}>
-                                    <Button variant="contained" size="small" sx={{ mt: 1 }}>
+                                <Typography variant="h6" className="titulo-proyecto" gutterBottom>
+                                    {proyecto.titulo}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    <span className="resaltado">Área:</span> {proyecto.area}
+                                </Typography>
+                                <Typography variant="body2" color="textSecondary">
+                                    <span className="resaltado">Institución:</span> {proyecto.institucion}
+                                </Typography>
+                                <Link to={`/proyecto/${proyecto.id}`} style={{ textDecoration: 'none' }}>
+                                    <Button className="boton-verde" size="small" sx={{ mt: 2 }}>
                                         Ver Detalles
                                     </Button>
                                 </Link>
                             </CardContent>
-                        </Card>
-                    </Grid>
-                ))}
-            </Grid>
+                        </div>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };
