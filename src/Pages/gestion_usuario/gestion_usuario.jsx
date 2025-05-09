@@ -12,7 +12,6 @@ import {
     collection, getDocs, deleteDoc, doc, updateDoc, setDoc
 } from 'firebase/firestore';
 
-
 const UserManagement = () => {
     const [users, setUsers] = useState([]);
     const [open, setOpen] = useState(false);
@@ -30,10 +29,14 @@ const UserManagement = () => {
     const fetchUsers = async () => {
         try {
             const querySnapshot = await getDocs(collection(db, "usuarios"));
-            const userList = querySnapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            }));
+            const userList = querySnapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    uid: data.uid || doc.id,
+                    ...data
+                };
+            });
             setUsers(userList);
         } catch (e) {
             setError("Error al obtener usuarios: " + e.message);
@@ -83,7 +86,7 @@ const UserManagement = () => {
                 const uid = userCredential.user.uid;
 
                 await setDoc(doc(db, "usuarios", uid), {
-                    uid, // agregar esta línea
+                    uid,
                     nombre,
                     email,
                     tipo
@@ -103,12 +106,13 @@ const UserManagement = () => {
     };
 
     const handleConfirmDelete = async () => {
+        if (!userToDelete?.id) {
+            console.error("ID no encontrado:", userToDelete);
+            setError("No se puede eliminar el usuario porque falta su ID.");
+            return;
+        }
+
         try {
-            // Primero elimina en Authentication
-            const eliminarUsuarioAuth = httpsCallable(functions, 'eliminarUsuarioAuth');
-            await eliminarUsuarioAuth({ uid: userToDelete.uid });
-    
-            // Luego elimina de Firestore
             await deleteDoc(doc(db, "usuarios", userToDelete.id));
             await fetchUsers();
             setUserToDelete(null);
@@ -132,7 +136,6 @@ const UserManagement = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell>Nombre</TableCell>
-                            <TableCell>Email</TableCell>
                             <TableCell>Tipo</TableCell>
                             <TableCell align="right">Acciones</TableCell>
                         </TableRow>
@@ -141,7 +144,6 @@ const UserManagement = () => {
                         {users.map((user) => (
                             <TableRow key={user.id}>
                                 <TableCell>{user.nombre}</TableCell>
-                                <TableCell>{user.email}</TableCell>
                                 <TableCell>{user.tipo}</TableCell>
                                 <TableCell align="right">
                                     <IconButton onClick={() => handleOpen(user)}><Edit /></IconButton>
@@ -164,14 +166,17 @@ const UserManagement = () => {
                         fullWidth
                         margin="dense"
                     />
-                    <TextField
-                        label="Email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        fullWidth
-                        margin="dense"
-                    />
+                    {!editMode && (
+                        <TextField
+                            label="Email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                            fullWidth
+                            margin="dense"
+                        />
+                    )}
+
                     {!editMode && (
                         <TextField
                             label="Contraseña"

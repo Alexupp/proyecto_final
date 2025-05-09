@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import {
     TextField, Button, Paper, Typography, Box, Grid,
-    MenuItem, Select, InputLabel, FormControl
+    MenuItem, Select, InputLabel, FormControl,
+    Dialog, DialogTitle, DialogContent, DialogActions
 } from '@mui/material';
 import './registro_proyecto.css';
 import { db } from '../../firebase';
@@ -20,12 +21,21 @@ const RegistroProyecto = () => {
         presupuesto: '',
         institucion: '',
         docente: '',
-        estado: '',
+        estado: 'Formulación',
         observaciones: '',
         integrantes: [{ nombre: '', apellido: '', identificacion: '', grado: '' }],
     });
 
     const [enviando, setEnviando] = useState(false);
+    const [modal, setModal] = useState({ open: false, titulo: '', mensaje: '', tipo: 'info' });
+
+    const mostrarModal = (titulo, mensaje, tipo = 'info') => {
+        setModal({ open: true, titulo, mensaje, tipo });
+    };
+
+    const cerrarModal = () => {
+        setModal({ ...modal, open: false });
+    };
 
     const handleChange = (e) => {
         setProyecto({ ...proyecto, [e.target.name]: e.target.value });
@@ -40,35 +50,31 @@ const RegistroProyecto = () => {
     const agregarIntegrante = () => {
         setProyecto({
             ...proyecto,
-            integrantes: [
-                ...proyecto.integrantes,
-                { nombre: '', apellido: '', identificacion: '', grado: '' },
-            ],
+            integrantes: [...proyecto.integrantes, { nombre: '', apellido: '', identificacion: '', grado: '' }],
         });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const presupuestoFloat = parseFloat(proyecto.presupuesto);
+
         if (isNaN(presupuestoFloat)) {
-            alert('❌ El presupuesto debe ser un número válido.');
+            mostrarModal('Error de validación', '❌ El presupuesto debe ser un número válido.', 'error');
             return;
         }
 
         if (!proyecto.estado || !proyecto.area || !proyecto.institucion || !proyecto.docente || !proyecto.objetivos) {
-            alert('❌ Todos los campos de selección son obligatorios.');
+            mostrarModal('Campos requeridos', '❌ Todos los campos de selección son obligatorios.', 'error');
             return;
         }
 
         if (proyecto.fechaFin < proyecto.fechaInicio) {
-            alert('❌ La fecha de fin no puede ser anterior a la fecha de inicio.');
+            mostrarModal('Fechas inválidas', '❌ La fecha de fin no puede ser anterior a la fecha de inicio.', 'error');
             return;
         }
 
         try {
             setEnviando(true);
-
             await addDoc(collection(db, "proyectos"), {
                 ...proyecto,
                 presupuesto: presupuestoFloat,
@@ -76,26 +82,19 @@ const RegistroProyecto = () => {
                     fechaInicio: proyecto.fechaInicio,
                     fechaFin: proyecto.fechaFin,
                 },
-                fechaRegistro: Timestamp.now()
+                fechaRegistro: Timestamp.now(),
             });
 
-            alert('✅ Proyecto registrado correctamente');
+            mostrarModal('Registro exitoso', '✅ Proyecto registrado correctamente.', 'success');
+
             setProyecto({
-                titulo: '',
-                area: '',
-                objetivos: '',
-                fechaInicio: '',
-                fechaFin: '',
-                presupuesto: '',
-                institucion: '',
-                docente: '',
-                estado: '',
-                observaciones: '',
+                titulo: '', area: '', objetivos: '', fechaInicio: '', fechaFin: '', presupuesto: '',
+                institucion: '', docente: '', estado: 'Formulación', observaciones: '',
                 integrantes: [{ nombre: '', apellido: '', identificacion: '', grado: '' }],
             });
         } catch (error) {
             console.error("Error al registrar el proyecto:", error);
-            alert('❌ Hubo un error al registrar el proyecto.');
+            mostrarModal('Error del servidor', '❌ Hubo un error al registrar el proyecto.', 'error');
         } finally {
             setEnviando(false);
         }
@@ -123,12 +122,7 @@ const RegistroProyecto = () => {
 
                     <FormControl fullWidth margin="normal" required>
                         <InputLabel id="objetivos-label">Objetivos</InputLabel>
-                        <Select
-                            labelId="objetivos-label"
-                            name="objetivos"
-                            value={proyecto.objetivos}
-                            onChange={handleChange}
-                        >
+                        <Select labelId="objetivos-label" name="objetivos" value={proyecto.objetivos} onChange={handleChange}>
                             <MenuItem value="Mejorar el rendimiento académico">Mejorar el rendimiento académico</MenuItem>
                             <MenuItem value="Fomentar la investigación escolar">Fomentar la investigación escolar</MenuItem>
                             <MenuItem value="Aplicar conocimientos en proyectos prácticos">Aplicar conocimientos en proyectos prácticos</MenuItem>
@@ -137,32 +131,10 @@ const RegistroProyecto = () => {
 
                     <Grid container spacing={2}>
                         <Grid item xs={6}>
-                            <TextField
-                                label="Fecha de inicio"
-                                name="fechaInicio"
-                                type="date"
-                                value={proyecto.fechaInicio}
-                                onChange={handleChange}
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ min: hoy }}
-                                required
-                            />
+                            <TextField label="Fecha de inicio" name="fechaInicio" type="date" value={proyecto.fechaInicio} onChange={handleChange} fullWidth margin="normal" InputLabelProps={{ shrink: true }} inputProps={{ min: hoy }} required />
                         </Grid>
                         <Grid item xs={6}>
-                            <TextField
-                                label="Fecha de fin"
-                                name="fechaFin"
-                                type="date"
-                                value={proyecto.fechaFin}
-                                onChange={handleChange}
-                                fullWidth
-                                margin="normal"
-                                InputLabelProps={{ shrink: true }}
-                                inputProps={{ max: fechaMaxima }}
-                                required
-                            />
+                            <TextField label="Fecha de fin" name="fechaFin" type="date" value={proyecto.fechaFin} onChange={handleChange} fullWidth margin="normal" InputLabelProps={{ shrink: true }} inputProps={{ max: fechaMaxima }} required />
                         </Grid>
                     </Grid>
 
@@ -189,17 +161,9 @@ const RegistroProyecto = () => {
                         </Select>
                     </FormControl>
 
-                    <FormControl fullWidth margin="normal" required>
-                        <InputLabel id="estado-label">Estado</InputLabel>
-                        <Select labelId="estado-label" name="estado" value={proyecto.estado} onChange={handleChange}>
-                            <MenuItem value="Activo">Activo</MenuItem>
-                            <MenuItem value="En evaluación">En evaluación</MenuItem>
-                        </Select>
-                    </FormControl>
-
                     <Typography variant="h6" mt={3} className="integrantes-titulo">
-  Integrantes del equipo
-</Typography>
+                        Integrantes del equipo
+                    </Typography>
 
                     {proyecto.integrantes.map((integrante, index) => (
                         <Grid container spacing={2} key={index} className="integrante-box">
@@ -217,24 +181,31 @@ const RegistroProyecto = () => {
                             </Grid>
                         </Grid>
                     ))}
-                    <Button
-                        className="agregar-integrante-btn"
-                        onClick={agregarIntegrante}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ mt: 2 }}
-                    >
+
+                    <Button onClick={agregarIntegrante} variant="outlined" fullWidth sx={{ mt: 2 }} className="agregar-integrante-btn">
                         Agregar Integrante
                     </Button>
 
-
                     <TextField label="Observaciones adicionales" name="observaciones" value={proyecto.observaciones} onChange={handleChange} fullWidth multiline margin="normal" />
 
-                    <Button type="submit" variant="contained" className="registro-btn" fullWidth sx={{ mt: 3 }} disabled={enviando}>
+                    <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }} disabled={enviando} className="registro-btn">
                         {enviando ? "Registrando..." : "Registrar Proyecto"}
                     </Button>
                 </form>
             </Paper>
+
+            {/* Modal */}
+            <Dialog open={modal.open} onClose={cerrarModal}>
+                <DialogTitle>{modal.titulo}</DialogTitle>
+                <DialogContent>
+                    <Typography>{modal.mensaje}</Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={cerrarModal} color="primary" autoFocus>
+                        Cerrar
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 };

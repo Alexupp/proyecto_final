@@ -24,6 +24,7 @@ function App() {
         <Route path="/registro-avance" element={<RegistroAvance />} />
         <Route path="/proyectos" element={<ListaProyectos />} />
         <Route path="/proyecto/:id" element={<DetalleProyecto />} />
+
         <Route path="/estado-proyecto" element={<EstadoProyecto />} />
         <Route path="/reportes" element={<VistaReportes />} />
       </Routes>

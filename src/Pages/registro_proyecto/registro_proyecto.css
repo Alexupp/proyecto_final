@@ -1,7 +1,7 @@
 /* Fondo general */
 .registro-container {
     min-height: 100vh;
-    background: linear-gradient(to right, #bbdefb, #1565c0);
+    background: linear-gradient(to right, #a5d6a7, #388e3c);
 
     display: flex;
     align-items: center;
@@ -24,7 +24,7 @@
 .registro-box h5 {
     font-size: 2.2rem;
     font-weight: 800;
-    color: #1565c0;
+    color: #388e3c;
     text-align: center;
     margin-bottom: 40px;
     position: relative;
@@ -36,14 +36,14 @@
     display: block;
     width: 80px;
     height: 4px;
-    background-color: #64b5f6;
+    background-color: #81c784;
     margin: 12px auto 0;
     border-radius: 2px;
 }
 
 /* Botón de Registrar Proyecto */
 .registro-btn {
-    background-color: #1976d2;
+    background-color: #388e3c;
     color: white;
     font-weight: 600;
     text-transform: none;
@@ -52,25 +52,25 @@
 }
 
 .registro-btn:hover {
-    background-color: #1565c0;
+    background-color: #2e7d32;
 }
 
 /* Botón agregar integrante */
 .MuiButton-outlined {
-    border-color: #64b5f6;
-    color: #1976d2;
+    border-color: #81c784;
+    color: #388e3c;
     font-weight: 600;
     transition: 0.3s ease;
 }
 
 .MuiButton-outlined:hover {
-    background-color: #e3f2fd;
-    border-color: #2196f3;
+    background-color: #c8e6c9;
+    border-color: #2e7d32;
 }
 
 /* Botón de agregar integrante */
 .agregar-integrante-btn {
-    background-color: #1976d2;
+    background-color: #388e3c;
     color: white;
     font-weight: 600;
     padding: 10px 0;
@@ -80,12 +80,12 @@
 }
 
 .agregar-integrante-btn:hover {
-    background-color: #1565c0;
+    background-color: #2e7d32;
 }
 
 /* Botón de Registrar Proyecto */
 .registro-container .registro-btn {
-    background-color: #1976d2;
+    background-color: #388e3c;
     color: white;
     font-weight: 600;
     text-transform: none;
@@ -94,17 +94,16 @@
 }
 
 .registro-container .registro-btn:hover {
-    background-color: #1565c0;
+    background-color: #2e7d32;
 }
 
 /* Aumentar la especificidad del selector */
 div .integrantes-titulo {
     font-size: 1.75rem;
     font-weight: 600;
-    color: #1565c0;
+    color: #388e3c;
     text-align: center;
     margin-bottom: 20px;
     font-family: 'Segoe UI', sans-serif;
     letter-spacing: 0.5px;
 }
-

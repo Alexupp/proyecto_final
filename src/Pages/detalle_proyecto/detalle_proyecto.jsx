@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography, Paper, Box, CircularProgress } from '@mui/material';
+import { Typography, Paper, Box, CircularProgress, Divider } from '@mui/material';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../firebase'; // Asegúrate de que la ruta sea correcta
+import { db } from '../../firebase';
 import './detalle_proyecto.css';
 
 const DetalleProyecto = () => {
@@ -15,7 +15,6 @@ const DetalleProyecto = () => {
             try {
                 const docRef = doc(db, 'proyectos', id);
                 const docSnap = await getDoc(docRef);
-
                 if (docSnap.exists()) {
                     setProyecto(docSnap.data());
                 } else {
@@ -50,55 +49,42 @@ const DetalleProyecto = () => {
 
     return (
         <Box className="detalle-container">
-            <Paper className="detalle-box" elevation={4}>
-                <Typography variant="h4" gutterBottom>
+            <Paper className="detalle-box" elevation={6}>
+                <Typography variant="h3" className="titulo">
                     {proyecto.titulo}
                 </Typography>
-                <Typography variant="body1">
-                    <strong>Área:</strong> {proyecto.area}
-                </Typography>
-                <Typography variant="body1">
-                    <strong>Objetivos:</strong> {proyecto.objetivos}
-                </Typography>
-                <Typography variant="body1">
-                    <strong>Cronograma:</strong> {proyecto.cronograma}
-                </Typography>
-                <Typography variant="body1">
-                    <strong>Presupuesto:</strong> {proyecto.presupuesto}
-                </Typography>
-                <Typography variant="body1">
-                    <strong>Institución:</strong> {proyecto.institucion}
-                </Typography>
-                <Typography variant="body1">
-                    <strong>Observaciones:</strong> {proyecto.observaciones}
-                </Typography>
 
-                {proyecto.integrantes && proyecto.integrantes.length > 0 && (
+                <Divider className="divider" />
+
+                <div className="info">
+                    <p><strong>Área:</strong> {proyecto.area}</p>
+                    <p><strong>Objetivos:</strong> {proyecto.objetivos}</p>
+                    <p><strong>Cronograma:</strong> {proyecto.cronograma?.fechaInicio} a {proyecto.cronograma?.fechaFin}</p>
+
+                    <p><strong>Presupuesto:</strong> ${Number(proyecto.presupuesto).toLocaleString()}</p>
+                    <p><strong>Institución:</strong> {proyecto.institucion}</p>
+                    <p><strong>Observaciones:</strong> {proyecto.observaciones}</p>
+                </div>
+
+                {proyecto.integrantes?.length > 0 && (
                     <>
-                        <Typography variant="h6" mt={2}>
-                            Integrantes
-                        </Typography>
-                        {proyecto.integrantes.map((int, idx) => (
-                            <Typography key={idx}>
-                                {int.nombre} {int.apellido} - Grado: {int.grado}
-                            </Typography>
-                        ))}
+                        <Divider className="divider" />
+                        <Typography variant="h5" className="subtitulo">Integrantes</Typography>
+                        <ul className="lista">
+                            {proyecto.integrantes.map((int, idx) => (
+                                <li key={idx}>{int.nombre} {int.apellido} - Grado: {int.grado}</li>
+                            ))}
+                        </ul>
                     </>
                 )}
 
-                {proyecto.archivos && proyecto.archivos.length > 0 && (
+                {proyecto.archivos?.length > 0 && (
                     <>
-                        <Typography variant="h6" mt={2}>
-                            Archivos
-                        </Typography>
+                        <Divider className="divider" />
+                        <Typography variant="h5" className="subtitulo">Archivos</Typography>
                         {proyecto.archivos.map((file, idx) => (
                             <div key={idx}>
-                                <a
-                                    href={file}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    download
-                                >
+                                <a href={file} target="_blank" rel="noopener noreferrer" download>
                                     {file.split('/').pop()}
                                 </a>
                             </div>
@@ -106,19 +92,13 @@ const DetalleProyecto = () => {
                     </>
                 )}
 
-                {proyecto.imagenes && proyecto.imagenes.length > 0 && (
+                {proyecto.imagenes?.length > 0 && (
                     <>
-                        <Typography variant="h6" mt={2}>
-                            Fotografías
-                        </Typography>
+                        <Divider className="divider" />
+                        <Typography variant="h5" className="subtitulo">Fotografías</Typography>
                         <Box className="imagen-box">
                             {proyecto.imagenes.map((img, idx) => (
-                                <img
-                                    key={idx}
-                                    src={img}
-                                    alt={`evidencia-${idx}`}
-                                    className="imagen"
-                                />
+                                <img key={idx} src={img} alt={`evidencia-${idx}`} className="imagen" />
                             ))}
                         </Box>
                     </>

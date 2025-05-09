@@ -26,9 +26,11 @@ const RegistroAvance = () => {
         imagenes: null,
     });
 
+    const [previewDocs, setPreviewDocs] = useState([]);
+    const [previewImgs, setPreviewImgs] = useState([]);
+
     const today = new Date().toISOString().split('T')[0];
 
-    // Cargar proyectos desde Firestore
     useEffect(() => {
         const fetchProyectos = async () => {
             try {
@@ -46,17 +48,25 @@ const RegistroAvance = () => {
         fetchProyectos();
     }, []);
 
-    // Manejo de cambios en los inputs
     const handleChange = (e) => {
         setAvance({ ...avance, [e.target.name]: e.target.value });
     };
 
-    // Manejo de la carga de archivos
     const handleFileChange = (e) => {
-        setAvance({ ...avance, [e.target.name]: e.target.files });
+        const archivos = Array.from(e.target.files);
+        setAvance({ ...avance, [e.target.name]: archivos });
+
+        if (e.target.name === 'imagenes') {
+            const urls = archivos.map((file) => URL.createObjectURL(file));
+            setPreviewImgs(urls);
+        }
+
+        if (e.target.name === 'documentos') {
+            const urls = archivos.map((file) => URL.createObjectURL(file));
+            setPreviewDocs(urls);
+        }
     };
 
-    // Subir archivos a Firebase Storage y obtener las URLs
     const subirArchivos = async (archivos, rutaBase) => {
         const urls = [];
         for (let i = 0; i < archivos.length; i++) {
@@ -70,16 +80,13 @@ const RegistroAvance = () => {
         return urls;
     };
 
-    // Enviar los datos del avance a Firestore
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            // Subir archivos (documentos e imágenes)
             const urlsDocs = avance.documentos ? await subirArchivos(avance.documentos, 'documentos') : [];
             const urlsImgs = avance.imagenes ? await subirArchivos(avance.imagenes, 'imagenes') : [];
 
-            // Crear el objeto para guardar en Firestore
             const nuevoAvance = {
                 proyecto: avance.proyecto,
                 fecha: Timestamp.fromDate(new Date(avance.fecha)),
@@ -89,7 +96,6 @@ const RegistroAvance = () => {
                 creadoEn: Timestamp.now(),
             };
 
-            // Guardar el avance en Firestore
             await addDoc(collection(db, 'avances'), nuevoAvance);
 
             alert('✅ Avance registrado con éxito');
@@ -100,6 +106,8 @@ const RegistroAvance = () => {
                 documentos: null,
                 imagenes: null,
             });
+            setPreviewDocs([]);
+            setPreviewImgs([]);
         } catch (error) {
             console.error('Error al registrar avance:', error);
             alert('❌ Error al registrar el avance');
@@ -173,6 +181,23 @@ const RegistroAvance = () => {
                             </Button>
                         </Grid>
 
+                        {previewDocs.length > 0 && (
+                            <Grid item xs={12}>
+                                <Box mt={2}>
+                                    <Typography variant="subtitle1">Vista previa de documentos:</Typography>
+                                    <ul>
+                                        {previewDocs.map((src, idx) => (
+                                            <li key={idx}>
+                                                <a href={src} target="_blank" rel="noopener noreferrer">
+                                                    Ver documento {idx + 1}
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Box>
+                            </Grid>
+                        )}
+
                         <Grid item xs={12}>
                             <InputLabel>Fotografías (JPG, PNG, etc.)</InputLabel>
                             <Button variant="outlined" component="label" fullWidth>
@@ -187,6 +212,21 @@ const RegistroAvance = () => {
                                 />
                             </Button>
                         </Grid>
+
+                        {previewImgs.length > 0 && (
+                            <Grid item xs={12}>
+                                <Box mt={2}>
+                                    <Typography variant="subtitle1">Vista previa de imágenes:</Typography>
+                                    <Grid container spacing={2}>
+                                        {previewImgs.map((src, idx) => (
+                                            <Grid item xs={4} key={idx}>
+                                                <img src={src} alt={`img-${idx}`} style={{ width: '100%', height: 'auto' }} />
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Box>
+                            </Grid>
+                        )}
                     </Grid>
 
                     <Button

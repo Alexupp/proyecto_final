@@ -5,16 +5,23 @@ import {
     Typography,
     Button,
     CircularProgress,
-    Box
+    Box,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle
 } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './lista_proyecto.css';
 
 const ListaProyectos = () => {
     const [proyectos, setProyectos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [proyectoAEliminar, setProyectoAEliminar] = useState(null);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
         const fetchProyectos = async () => {
@@ -34,6 +41,19 @@ const ListaProyectos = () => {
 
         fetchProyectos();
     }, []);
+
+    const handleEliminar = async () => {
+        if (!proyectoAEliminar) return;
+        try {
+            await deleteDoc(doc(db, 'proyectos', proyectoAEliminar));
+            setProyectos(prev => prev.filter(p => p.id !== proyectoAEliminar));
+        } catch (error) {
+            console.error('Error al eliminar proyecto:', error);
+        } finally {
+            setConfirmOpen(false);
+            setProyectoAEliminar(null);
+        }
+    };
 
     return (
         <div className="lista-container">
@@ -59,16 +79,45 @@ const ListaProyectos = () => {
                                 <Typography variant="body2" color="textSecondary">
                                     <span className="resaltado">Institución:</span> {proyecto.institucion}
                                 </Typography>
-                                <Link to={`/proyecto/${proyecto.id}`} style={{ textDecoration: 'none' }}>
-                                    <Button className="boton-verde" size="small" sx={{ mt: 2 }}>
-                                        Ver Detalles
+                                <Box display="flex" gap={1} mt={2}>
+                                    <Link to={`/proyecto/${proyecto.id}`} style={{ textDecoration: 'none' }}>
+                                        <Button className="boton-verde" size="small">
+                                            Ver Detalles
+                                        </Button>
+                                    </Link>
+                                    <Button
+                                        color="error"
+                                        variant="outlined"
+                                        size="small"
+                                        onClick={() => {
+                                            setProyectoAEliminar(proyecto.id);
+                                            setConfirmOpen(true);
+                                        }}
+                                    >
+                                        Eliminar
                                     </Button>
-                                </Link>
+                                </Box>
                             </CardContent>
                         </div>
                     ))}
                 </div>
             )}
+
+            <Dialog
+                open={confirmOpen}
+                onClose={() => setConfirmOpen(false)}
+            >
+                <DialogTitle>Confirmar eliminación</DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        ¿Estás seguro de que deseas eliminar este proyecto? Esta acción no se puede deshacer.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>Cancelar</Button>
+                    <Button onClick={handleEliminar} color="error">Eliminar</Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };

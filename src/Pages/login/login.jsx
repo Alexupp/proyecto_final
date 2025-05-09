@@ -33,7 +33,7 @@ const Login = () => {
                     if (userData.tipo === 'estudiante') {
                         navigate('/inicio');
                     } else if (userData.tipo === 'docente') {
-                        navigate('/proyectos');
+                        navigate('/inicio');
                     } else if (userData.tipo === 'coordinador') {
                         navigate('/inicio');
                     } else {

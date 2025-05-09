@@ -1,136 +1,138 @@
-/* Estilos para Estado del Proyecto */
-.estado-container {
+.estado-fondo {
     min-height: 100vh;
-    background: #e1f5e1; /* Fondo verde muy claro */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 40px 20px;
-    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(to bottom right, #a8e6cf, #f4fdf7);
+    padding: 2rem;
+    box-sizing: border-box;
 }
 
-.estado-box {
-    background: #ffffff; /* Fondo blanco para el contenedor principal */
+.estado-container {
+    background-color: #f4fdf7;
     padding: 30px;
-    max-width: 600px;
+    border-radius: 16px;
+    box-shadow: 0 0 12px rgba(0, 128, 0, 0.1);
+    max-width: 700px;
+    margin: 40px auto;
+    font-family: 'Segoe UI', sans-serif;
+    color: #2f4f2f;
+}
+
+.estado-titulo {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #26734d;
+    text-align: center;
+}
+
+.campo {
+    margin-bottom: 20px;
+}
+
+.campo label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+select,
+textarea {
     width: 100%;
-    border-radius: 16px; /* Bordes redondeados */
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2); /* Sombra más visible */
-    transition: box-shadow 0.3s ease;
+    padding: 10px;
+    border: 1px solid #a3d9a5;
+    border-radius: 8px;
+    background-color: #ffffff;
+    font-size: 15px;
 }
 
-.estado-box:hover {
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
+textarea {
+    resize: vertical;
+    min-height: 70px;
 }
 
-.estado-box .titulo {
-    font-size: 2.5rem; /* Aumento del tamaño del título */
-    font-weight: 700;
-    color: #1b5e20; /* Verde más oscuro */
-    text-align: center;
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 2px; /* Más espacio entre letras */
-    font-family: 'Montserrat', sans-serif;
-}
-
-.estado-box .descripcion {
-    font-size: 1.2rem; /* Aumento en el tamaño del texto */
-    color: #333; /* Gris oscuro */
-    line-height: 1.8;
-    margin-bottom: 20px;
-    padding: 20px;
-    background-color: #a5d6a7; /* Fondo verde medio */
-    border-left: 8px solid #1b5e20; /* Borde verde muy oscuro */
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-}
-
-.estado-box .select, .estado-box .textField {
-    margin-top: 30px;
-    background-color: #ffffff; /* Fondo blanco */
+.btn-guardar {
+    background-color: #34a853;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    font-size: 16px;
     border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-    border: 2px solid #388e3c; /* Borde verde oscuro */
-}
-
-.estado-box .button {
-    margin-top: 30px;
-    background-color: #388e3c; /* Verde oscuro */
-    color: white;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    width: 100%;
 }
 
-.estado-box .button:hover {
-    background-color: #1b5e20; /* Verde muy oscuro */
-    transform: scale(1.05);
+.btn-guardar:hover {
+    background-color: #2c8c47;
 }
 
-.estado-box .button:active {
-    transform: scale(0.98);
+.estado-subtitulo {
+    margin-top: 30px;
+    font-size: 20px;
+    color: #1d4e35;
+    border-bottom: 1px solid #a3d9a5;
+    padding-bottom: 5px;
 }
 
-.historial-item {
-    border-bottom: 2px solid #1b5e20; /* Borde verde oscuro */
-    margin-bottom: 15px;
-    padding-bottom: 15px;
-    color: #1b5e20; /* Texto verde oscuro */
-    font-size: 1.2rem; /* Aumento en el tamaño de la fuente */
-}
-
-.historial-item .fecha {
-    font-weight: 600;
-    color: #1b5e20; /* Verde muy oscuro */
-}
-
-.historial-item .observacion {
+.estado-mensaje {
     font-style: italic;
-    color: #666; /* Gris claro */
+    color: #666;
+    margin-top: 10px;
 }
 
-.estado-box .historial-header {
-    margin-top: 30px;
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #1b5e20; /* Verde muy oscuro */
+.historial-lista {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.historial-lista li {
+    background-color: #e7f8ed;
+    border: 1px solid #b2deb6;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 10px;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-contenido {
+    background: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    max-width: 400px;
+    width: 100%;
     text-align: center;
-    margin-bottom: 20px;
+    animation: aparecer 0.3s ease;
 }
 
-.estado-box .list {
-    background-color: #fafafa; /* Fondo gris claro */
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-}
-
-/* Cambios en botones secundarios */
-.estado-box .button-secondary {
-    background-color: #d32f2f; /* Rojo oscuro */
+.btn-cerrar {
+    margin-top: 1rem;
+    background-color: #4CAF50;
     color: white;
-    padding: 14px;
-    border-radius: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    transition: background-color 0.3s ease, transform 0.3s ease;
+    padding: 0.5rem 1.2rem;
     border: none;
+    border-radius: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.estado-box .button-secondary:hover {
-    background-color: #b71c1c; /* Rojo más oscuro */
-    transform: scale(1.05);
-}
-
-.estado-box .button-secondary:active {
-    transform: scale(0.98);
+@keyframes aparecer {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }

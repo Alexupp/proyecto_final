@@ -31,14 +31,41 @@ const VistaReportes = () => {
 
     const fetchProyectos = async () => {
         try {
-            const snapshot = await getDocs(collection(db, 'proyectos'));
-            const lista = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const proyectosSnapshot = await getDocs(collection(db, 'proyectos'));
+            const historialSnapshot = await getDocs(collection(db, 'historial'));
+
+            const historialPorProyecto = {};
+
+            // Organiza el historial por proyectoId con la última entrada (mayor fecha)
+            historialSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+                const { proyectoId, fecha } = data;
+                if (
+                    !historialPorProyecto[proyectoId] ||
+                    (fecha?.seconds > historialPorProyecto[proyectoId].fecha?.seconds)
+                ) {
+                    historialPorProyecto[proyectoId] = data;
+                }
+            });
+
+            const lista = proyectosSnapshot.docs.map(doc => {
+                const data = doc.data();
+                const historial = historialPorProyecto[doc.id];
+
+                return {
+                    id: doc.id,
+                    ...data,
+                    estado: historial?.estado || data.estado || 'Sin estado'
+                };
+            });
+
             setProyectos(lista);
             setResultados(lista);
         } catch (error) {
-            console.error("Error al obtener proyectos:", error);
+            console.error("Error al obtener proyectos o historial:", error);
         }
     };
+
 
     useEffect(() => {
         fetchProyectos();
@@ -93,7 +120,6 @@ const VistaReportes = () => {
                             label="Institución"
                         >
                             <MenuItem value="">Todas las instituciones</MenuItem>
-                            <MenuItem value="Universidad de la Amazonia">Universidad de la Amazonia</MenuItem>
                             <MenuItem value="Normal Superior">Normal Superior</MenuItem>
                             <MenuItem value="Juan Bautista La Salle">Juan Bautista La Salle</MenuItem>
                             <MenuItem value="Sagrados Corazones">Sagrados Corazones</MenuItem>
@@ -125,10 +151,13 @@ const VistaReportes = () => {
                             label="Estado"
                         >
                             <MenuItem value="">Todos los estados</MenuItem>
-                            <MenuItem value="Activo">Activo</MenuItem>
-                            <MenuItem value="En evaluación">En evaluación</MenuItem>
+                            <MenuItem value="Formulación">Formulación</MenuItem>
+                            <MenuItem value="Ejecución">Ejecución</MenuItem>
+                            <MenuItem value="Seguimiento">Seguimiento</MenuItem>
                             <MenuItem value="Finalizado">Finalizado</MenuItem>
+                            <MenuItem value="Cancelado">Cancelado</MenuItem>
                         </Select>
+
                     </FormControl>
 
                     <Button variant="contained" onClick={handleBuscar} sx={{ mt: 2 }}>

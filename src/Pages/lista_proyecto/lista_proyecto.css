@@ -1,55 +1,63 @@
 /* Contenedor principal */
 .lista-container {
-    padding: 30px;
+    padding: 40px 30px 30px 30px;
     max-width: 1200px;
-    margin: 0 auto;
-    border-radius: 16px;
+    margin: 40px auto 0;
+    border-radius: 20px;
     font-family: 'Segoe UI', sans-serif;
     background: linear-gradient(to right, #b2e0b2, #6fe473);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Título principal */
+.titulo-lista {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #1b5e20;
+    margin-bottom: 24px;
+    text-align: center;
 }
 
 /* Grid para organizar las tarjetas */
 .proyectos-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 24px;
-    margin-top: 20px;
 }
 
 /* Tarjeta de proyecto */
 .proyecto-card {
-    padding: 16px;
-    border-radius: 12px;
+    border-radius: 16px;
     background-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .proyecto-card:hover {
-    transform: scale(1.03);
-    background-color: #d4fbe6;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
+    background-color: #e4fbe9;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
 }
 
 /* Contenido de la tarjeta */
 .proyecto-card .MuiCardContent-root {
-    padding: 16px;
+    padding: 20px;
 }
 
 /* Título del proyecto resaltado */
 .titulo-proyecto {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #1b5e20;
     text-transform: capitalize;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 /* Detalles del proyecto */
 .MuiTypography-body2 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: #4e944f;
+    margin-bottom: 6px;
 }
 
 /* Etiquetas resaltadas */
@@ -57,28 +65,46 @@
     font-weight: bold;
     color: #1b5e20;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
 }
 
-/* Botón verde personalizado */
-.boton-verde {
-    background-color: #69b578;
+/* Botones en línea */
+.MuiBox-root {
+    display: flex;
+    gap: 12px;
+}
+
+/* Botón verde común */
+.boton-verde,
+.boton-verde.MuiButton-root {
+    background-color: #4caf50;
     color: white;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 8px 18px;
+    border-radius: 10px;
     text-transform: none;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: inline-block;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.25s ease, transform 0.2s ease;
 }
 
 .boton-verde:hover {
-    background-color: #57a263;
+    background-color: #388e3c;
     transform: translateY(-2px);
 }
 
-.boton-verde:active {
-    transform: translateY(1px);
+/* Botón eliminar con tonalidad verde fuerte */
+.MuiButton-outlined.MuiButton-sizeSmall {
+    border: 2px solid #a5d6a7;
+    color: #2e7d32;
+    font-weight: 600;
+    transition: background-color 0.25s ease, transform 0.2s ease;
+    border-radius: 10px;
+    text-transform: none;
+}
+
+.MuiButton-outlined.MuiButton-sizeSmall:hover {
+    background-color: #dcedc8;
+    border-color: #81c784;
+    transform: translateY(-2px);
 }
