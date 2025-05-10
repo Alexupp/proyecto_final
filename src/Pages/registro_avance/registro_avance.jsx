@@ -10,13 +10,15 @@ import {
     MenuItem,
     Select,
     FormControl,
+    Modal,
 } from '@mui/material';
-import { collection, getDocs, addDoc, Timestamp } from 'firebase/firestore';
+import { collection, getDocs, addDoc, Timestamp, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 import './registro_avance.css';
 
 const RegistroAvance = () => {
+    const [openModal, setOpenModal] = useState(false);
     const [proyectos, setProyectos] = useState([]);
     const [avance, setAvance] = useState({
         proyecto: '',
@@ -25,9 +27,6 @@ const RegistroAvance = () => {
         documentos: null,
         imagenes: null,
     });
-
-    const [previewDocs, setPreviewDocs] = useState([]);
-    const [previewImgs, setPreviewImgs] = useState([]);
 
     const today = new Date().toISOString().split('T')[0];
 
@@ -55,22 +54,11 @@ const RegistroAvance = () => {
     const handleFileChange = (e) => {
         const archivos = Array.from(e.target.files);
         setAvance({ ...avance, [e.target.name]: archivos });
-
-        if (e.target.name === 'imagenes') {
-            const urls = archivos.map((file) => URL.createObjectURL(file));
-            setPreviewImgs(urls);
-        }
-
-        if (e.target.name === 'documentos') {
-            const urls = archivos.map((file) => URL.createObjectURL(file));
-            setPreviewDocs(urls);
-        }
     };
 
     const subirArchivos = async (archivos, rutaBase) => {
         const urls = [];
-        for (let i = 0; i < archivos.length; i++) {
-            const archivo = archivos[i];
+        for (const archivo of archivos) {
             const ruta = `${rutaBase}/${Date.now()}_${archivo.name}`;
             const archivoRef = ref(storage, ruta);
             await uploadBytes(archivoRef, archivo);
@@ -89,6 +77,7 @@ const RegistroAvance = () => {
 
             const nuevoAvance = {
                 proyecto: avance.proyecto,
+                proyectoId: proyectos.find(p => p.titulo === avance.proyecto)?.id || '',
                 fecha: Timestamp.fromDate(new Date(avance.fecha)),
                 descripcion: avance.descripcion,
                 documentos: urlsDocs,
@@ -96,9 +85,12 @@ const RegistroAvance = () => {
                 creadoEn: Timestamp.now(),
             };
 
-            await addDoc(collection(db, 'avances'), nuevoAvance);
+            const docRef = await addDoc(collection(db, 'avances'), nuevoAvance);
+            await setDoc(docRef, { id: docRef.id }, { merge: true });
 
-            alert('✅ Avance registrado con éxito');
+            // Abrir el modal después de registrar el avance
+            setOpenModal(true);
+
             setAvance({
                 proyecto: '',
                 fecha: '',
@@ -106,8 +98,6 @@ const RegistroAvance = () => {
                 documentos: null,
                 imagenes: null,
             });
-            setPreviewDocs([]);
-            setPreviewImgs([]);
         } catch (error) {
             console.error('Error al registrar avance:', error);
             alert('❌ Error al registrar el avance');
@@ -116,8 +106,31 @@ const RegistroAvance = () => {
 
     return (
         <Box className="avance-container">
+            {/* Modal que se abre cuando se registra el avance */}
+            <Modal
+                open={openModal}
+                onClose={() => setOpenModal(false)} 
+                aria-labelledby="modal-title"
+                aria-describedby="modal-description"
+                closeAfterTransition
+                BackdropProps={{
+                    timeout: 500, 
+                }}
+            >
+                <Box className="modal-box">
+                    <Typography id="modal-title" variant="h6" component="h2" className="modal-title" gutterBottom>
+                        ✅ Avance registrado
+                    </Typography>
+                    
+                    <Button variant="contained" className="modal-close-btn" onClick={() => setOpenModal(false)}>
+                        Cerrar
+                    </Button>
+                </Box>
+            </Modal>
+
+
             <Paper elevation={8} className="avance-box">
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5">
                     🚀 Registro de Avance de Proyecto
                 </Typography>
 
@@ -126,11 +139,10 @@ const RegistroAvance = () => {
                         <InputLabel id="proyecto-label">Proyecto</InputLabel>
                         <Select
                             labelId="proyecto-label"
-                            id="proyecto"
                             name="proyecto"
                             value={avance.proyecto}
-                            label="Proyecto"
                             onChange={handleChange}
+                            label="Proyecto"
                         >
                             {proyectos.map((proy) => (
                                 <MenuItem key={proy.id} value={proy.titulo}>
@@ -181,23 +193,6 @@ const RegistroAvance = () => {
                             </Button>
                         </Grid>
 
-                        {previewDocs.length > 0 && (
-                            <Grid item xs={12}>
-                                <Box mt={2}>
-                                    <Typography variant="subtitle1">Vista previa de documentos:</Typography>
-                                    <ul>
-                                        {previewDocs.map((src, idx) => (
-                                            <li key={idx}>
-                                                <a href={src} target="_blank" rel="noopener noreferrer">
-                                                    Ver documento {idx + 1}
-                                                </a>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </Box>
-                            </Grid>
-                        )}
-
                         <Grid item xs={12}>
                             <InputLabel>Fotografías (JPG, PNG, etc.)</InputLabel>
                             <Button variant="outlined" component="label" fullWidth>
@@ -212,30 +207,9 @@ const RegistroAvance = () => {
                                 />
                             </Button>
                         </Grid>
-
-                        {previewImgs.length > 0 && (
-                            <Grid item xs={12}>
-                                <Box mt={2}>
-                                    <Typography variant="subtitle1">Vista previa de imágenes:</Typography>
-                                    <Grid container spacing={2}>
-                                        {previewImgs.map((src, idx) => (
-                                            <Grid item xs={4} key={idx}>
-                                                <img src={src} alt={`img-${idx}`} style={{ width: '100%', height: 'auto' }} />
-                                            </Grid>
-                                        ))}
-                                    </Grid>
-                                </Box>
-                            </Grid>
-                        )}
                     </Grid>
 
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                        fullWidth
-                        sx={{ mt: 3 }}
-                    >
+                    <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
                         Registrar Avance
                     </Button>
                 </form>

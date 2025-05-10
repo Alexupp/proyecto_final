@@ -25,7 +25,7 @@ const Inicio = () => {
                 }
             } else {
                 // Si no hay usuario autenticado, redirigir al login
-                navigate('/login');
+                navigate('/inicio');
             }
         };
 

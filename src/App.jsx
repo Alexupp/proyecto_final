@@ -9,13 +9,13 @@ import DetalleProyecto from './Pages/detalle_proyecto/detalle_proyecto';
 import EstadoProyecto from './Pages/estado_proyecto/estado_proyecto';
 import VistaReportes from './Pages/reporte/reporte';
 import Inicio from './Pages/inicio/inicio';
+import NotFoundPage from './Pages/error_pagina/error_pagina';
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/inicio" />} />
-        
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -24,9 +24,11 @@ function App() {
         <Route path="/registro-avance" element={<RegistroAvance />} />
         <Route path="/proyectos" element={<ListaProyectos />} />
         <Route path="/proyecto/:id" element={<DetalleProyecto />} />
-
         <Route path="/estado-proyecto" element={<EstadoProyecto />} />
         <Route path="/reportes" element={<VistaReportes />} />
+
+        {/* Ruta comodín para manejar 404 */}
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
     Drawer,
     List,
@@ -21,6 +22,14 @@ import { Link } from 'react-router-dom';
 import './sidebar.css';
 
 const Sidebar = ({ isOpen, setIsOpen, user }) => {
+
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();              // Borra al usuario
+        navigate('/inicio');   // Redirige a la página de inicio
+
+    };
     return (
         <Drawer
             className="sidebar"
@@ -54,7 +63,6 @@ const Sidebar = ({ isOpen, setIsOpen, user }) => {
                         ? `MENU ${user.tipo.toUpperCase()}`
                         : 'MENU'}
                 </h2>
-
             </div>
             <List>
                 {/* Menú para usuarios no autenticados */}

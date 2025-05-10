@@ -112,14 +112,15 @@ const Login = () => {
                     ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
                 </Typography>
 
-                <div className="link-container">
+                {/* <div className="link-container">
                     <Link to="/gestion-usuarios">Ir a gestión de usuarios</Link>
                     <Link to="/registro-proyecto">Registrar un proyecto</Link>
                     <Link to="/registro-avance">Registrar avance</Link>
                     <Link to="/proyectos">Ver proyectos</Link>
                     <Link to="/estado-proyecto">Ver estado de proyecto</Link>
                     <Link to="/reportes">Reportes y Búsqueda</Link>
-                </div>
+                </div> */}
+                
             </Paper>
 
             {/* Modal de error */}

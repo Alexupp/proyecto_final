@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Paper, Box, CircularProgress, Divider } from '@mui/material';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase';
 import './detalle_proyecto.css';
 
@@ -9,6 +9,7 @@ const DetalleProyecto = () => {
     const { id } = useParams();
     const [proyecto, setProyecto] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [avances, setAvances] = useState([]);
 
     useEffect(() => {
         const fetchProyecto = async () => {
@@ -29,6 +30,24 @@ const DetalleProyecto = () => {
         };
 
         fetchProyecto();
+    }, [id]);
+
+    useEffect(() => {
+        const fetchAvances = async () => {
+            try {
+                const q = query(collection(db, 'avances'), where('proyectoId', '==', id));
+                const querySnapshot = await getDocs(q);
+                const listaAvances = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setAvances(listaAvances);
+            } catch (error) {
+                console.error('Error al obtener avances:', error);
+            }
+        };
+
+        if (id) fetchAvances();
     }, [id]);
 
     if (loading) {
@@ -60,7 +79,6 @@ const DetalleProyecto = () => {
                     <p><strong>Área:</strong> {proyecto.area}</p>
                     <p><strong>Objetivos:</strong> {proyecto.objetivos}</p>
                     <p><strong>Cronograma:</strong> {proyecto.cronograma?.fechaInicio} a {proyecto.cronograma?.fechaFin}</p>
-
                     <p><strong>Presupuesto:</strong> ${Number(proyecto.presupuesto).toLocaleString()}</p>
                     <p><strong>Institución:</strong> {proyecto.institucion}</p>
                     <p><strong>Observaciones:</strong> {proyecto.observaciones}</p>
@@ -103,6 +121,54 @@ const DetalleProyecto = () => {
                         </Box>
                     </>
                 )}
+{avances.length > 0 && (
+    <>
+        <Divider className="divider" />
+        <Typography variant="h5" className="subtitulo">Avances</Typography>
+        <Box className="avance-grid-wrapper">
+            {avances.map((avance) => (
+                <Paper key={avance.id} elevation={3} className="avance-card">
+                    <Typography className="avance-fecha">
+                        {avance.fecha?.toDate().toLocaleDateString()}
+                    </Typography>
+
+                    <Typography className="avance-descripcion">
+                        {avance.descripcion}
+                    </Typography>
+
+                    {(avance.documentos?.length > 0 || avance.imagenes?.length > 0) && (
+                        <Box className="avance-enlaces">
+                            {avance.documentos?.map((docUrl, i) => (
+                                <a
+                                    key={`doc-${i}`}
+                                    href={docUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="avance-boton"
+                                >
+                                    Documento
+                                </a>
+                            ))}
+                            {avance.imagenes?.map((imgUrl, i) => (
+                                <a
+                                    key={`img-${i}`}
+                                    href={imgUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="avance-boton"
+                                >
+                                    Imagen
+                                </a>
+                            ))}
+                        </Box>
+                    )}
+                </Paper>
+            ))}
+        </Box>
+    </>
+)}
+
+
             </Paper>
         </Box>
     );
