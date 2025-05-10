@@ -198,3 +198,109 @@ section:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+@media (max-width: 992px) {
+    .inicio-header {
+        padding: 2rem;
+    }
+
+    .inicio-header h1 {
+        font-size: 2rem;
+    }
+
+    .inicio-header p {
+        font-size: 1.1rem;
+    }
+
+    .inicio-content {
+        padding: 2rem 1.5rem;
+        gap: 2rem;
+    }
+
+    section {
+        padding: 2rem;
+    }
+
+    .objetivos-section ul {
+        font-size: 1rem;
+    }
+
+    .objetivos-section li {
+        font-size: 1rem;
+    }
+
+    .beneficio-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .beneficio-card p {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .inicio-layout {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .inicio-header {
+        padding: 1.5rem;
+        text-align: left;
+        border-radius: 0;
+    }
+
+    .inicio-header h1 {
+        font-size: 1.7rem;
+    }
+
+    .inicio-header p {
+        font-size: 1rem;
+    }
+
+    .inicio-content {
+        padding: 1.5rem 1rem;
+        gap: 1.5rem;
+    }
+
+    section {
+        padding: 1.5rem;
+    }
+
+    .section-image {
+        max-height: 200px;
+    }
+
+    .objetivos-section ul {
+        padding-left: 1.2rem;
+    }
+
+    .objetivos-section li {
+        padding-left: 24px;
+        font-size: 0.95rem;
+    }
+
+    .objetivos-section li::before {
+        font-size: 1.2rem;
+    }
+
+    .beneficios-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .beneficio-card {
+        padding: 1.5rem;
+    }
+
+    .beneficio-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .beneficio-card p {
+        font-size: 0.95rem;
+    }
+
+    .beneficio-card img {
+        max-height: 130px;
+    }
+}

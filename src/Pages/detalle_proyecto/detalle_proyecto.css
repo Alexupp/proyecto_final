@@ -272,3 +272,84 @@
 .avance-boton:hover {
     background-color: #1565c0;
 }
+
+@media (max-width: 768px) {
+    .detalle-box {
+        padding: 20px;
+    }
+
+    .detalle-box .titulo {
+        font-size: 2rem;
+    }
+
+    .detalle-box .descripcion {
+        font-size: 1rem;
+        padding: 12px;
+    }
+
+    .detalle-box .imagen-box .imagen {
+        width: 150px;
+        height: 150px;
+    }
+
+    .detalle-box .acciones {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .detalle-box .acciones .boton,
+    .detalle-box .acciones .boton-secundario {
+        width: 100%;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .avance-grid {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .col-descripcion {
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+
+    .descripcion-box {
+        height: auto;
+        max-width: 100%;
+    }
+
+    .col-fecha {
+        text-align: left;
+        font-size: 0.95rem;
+        margin-top: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .detalle-box .titulo {
+        font-size: 1.6rem;
+    }
+
+    .detalle-box .descripcion {
+        font-size: 0.95rem;
+    }
+
+    .detalle-box .imagen-box .imagen {
+        width: 120px;
+        height: 120px;
+    }
+
+    .avance-card {
+        padding: 16px;
+    }
+
+    .avance-descripcion {
+        font-size: 0.9rem;
+    }
+
+    .avance-fecha {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+}

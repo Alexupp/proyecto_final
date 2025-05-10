@@ -136,3 +136,72 @@ textarea {
         opacity: 1;
     }
 }
+
+
+@media (max-width: 768px) {
+    .estado-container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    .estado-titulo {
+        font-size: 20px;
+    }
+
+    .estado-subtitulo {
+        font-size: 18px;
+    }
+
+    select,
+    textarea {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .btn-guardar {
+        padding: 10px 14px;
+        font-size: 15px;
+    }
+
+    .historial-lista li {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .modal-contenido {
+        padding: 1.5rem;
+        max-width: 90%;
+    }
+
+    .btn-cerrar {
+        padding: 0.5rem 1rem;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .estado-titulo {
+        font-size: 18px;
+    }
+
+    .estado-subtitulo {
+        font-size: 16px;
+    }
+
+    .btn-guardar {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .modal-contenido {
+        padding: 1rem;
+    }
+
+    .campo label {
+        font-size: 14px;
+    }
+
+    .historial-lista li {
+        font-size: 13px;
+    }
+}

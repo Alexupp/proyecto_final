@@ -57,3 +57,43 @@
     border-top: 1px solid #c8e6c9;
     padding-top: 10px;
 }
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-section {
+        min-width: 100%;
+    }
+
+    .social-icons a {
+        margin-right: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer {
+        padding: 20px 15px 10px;
+    }
+
+    .footer-section h3,
+    .footer-section h4 {
+        font-size: 1.1rem;
+    }
+
+    .footer-section ul li a {
+        font-size: 0.95rem;
+    }
+
+    .footer-bottom {
+        font-size: 13px;
+        padding-top: 8px;
+    }
+
+    .social-icons a {
+        font-size: 1.2rem;
+    }
+}

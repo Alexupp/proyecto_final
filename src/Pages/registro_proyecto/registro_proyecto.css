@@ -107,3 +107,53 @@ div .integrantes-titulo {
     font-family: 'Segoe UI', sans-serif;
     letter-spacing: 0.5px;
 }
+
+@media (max-width: 768px) {
+    .registro-box {
+        padding: 30px;
+    }
+
+    .registro-box h5 {
+        font-size: 1.8rem;
+        margin-bottom: 30px;
+    }
+
+    .registro-container {
+        padding: 30px 15px;
+    }
+
+    .registro-btn,
+    .agregar-integrante-btn {
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    .integrantes-titulo {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .registro-box {
+        padding: 20px;
+    }
+
+    .registro-box h5 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .registro-container {
+        padding: 20px 10px;
+    }
+
+    .registro-btn,
+    .agregar-integrante-btn {
+        padding: 8px 15px;
+        font-size: 12px;
+    }
+
+    .integrantes-titulo {
+        font-size: 1.3rem;
+    }
+}

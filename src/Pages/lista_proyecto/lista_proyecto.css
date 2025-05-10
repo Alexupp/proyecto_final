@@ -108,3 +108,60 @@
     border-color: #81c784;
     transform: translateY(-2px);
 }
+
+@media (max-width: 768px) {
+    .lista-container {
+        padding: 30px 20px;
+        margin: 20px auto 0;
+    }
+
+    .titulo-lista {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .proyectos-grid {
+        gap: 16px;
+    }
+
+    .titulo-proyecto {
+        font-size: 1.2rem;
+    }
+
+    .MuiTypography-body2 {
+        font-size: 0.95rem;
+    }
+
+    .boton-verde,
+    .MuiButton-outlined.MuiButton-sizeSmall {
+        font-size: 0.9rem;
+        padding: 6px 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .lista-container {
+        padding: 20px 15px;
+    }
+
+    .titulo-lista {
+        font-size: 1.4rem;
+    }
+
+    .proyectos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .boton-verde,
+    .MuiButton-outlined.MuiButton-sizeSmall {
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .MuiBox-root {
+        flex-direction: column;
+        gap: 10px;
+    }
+}

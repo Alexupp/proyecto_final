@@ -90,3 +90,45 @@
         transform: translateY(0);
     }
 }
+
+@media (max-width: 768px) {
+    .login-box {
+        padding: 36px 30px;
+        max-width: 90%;
+    }
+
+    .login-button {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+
+    .login-footer,
+    .link-container {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px;
+    }
+
+    .login-box {
+        padding: 28px 20px;
+        border-radius: 20px;
+    }
+
+    .login-button {
+        padding: 12px;
+        font-size: 0.9rem;
+    }
+
+    .login-footer,
+    .link-container {
+        font-size: 0.8rem;
+    }
+
+    .link-container a {
+        font-size: 0.85rem;
+    }
+}

@@ -76,3 +76,63 @@
 .modal-close-btn:hover {
     background-color: #388e3c;
 }
+
+@media (max-width: 768px) {
+    .avance-box {
+        padding: 32px;
+    }
+
+    .avance-container {
+        padding: 20px;
+    }
+
+    .modal-box {
+        width: 85%;
+        padding: 20px;
+    }
+
+    .modal-title {
+        font-size: 18px;
+    }
+
+    .modal-description {
+        font-size: 14px;
+    }
+
+    .MuiButton-containedPrimary {
+        font-size: 14px;
+        padding: 8px 16px;
+    }
+
+    .modal-close-btn {
+        padding: 8px 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .avance-box {
+        padding: 24px;
+    }
+
+    .modal-box {
+        width: 90%;
+        padding: 16px;
+    }
+
+    .modal-title {
+        font-size: 16px;
+    }
+
+    .modal-description {
+        font-size: 12px;
+    }
+
+    .MuiButton-containedPrimary {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .modal-close-btn {
+        padding: 6px 12px;
+    }
+}
