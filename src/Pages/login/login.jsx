@@ -1,64 +1,118 @@
 import React, { useState } from 'react';
 import {
     TextField, Button, Paper, Typography, Box,
-    Dialog, DialogTitle, DialogContent, DialogActions
+    Dialog, DialogTitle, DialogContent, DialogActions, Divider
 } from '@mui/material';
-import './login.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { auth, db, googleProvider } from '../../firebase';
+import GoogleIcon from '@mui/icons-material/Google';
+import './login.css';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [openError, setOpenError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
     
         try {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-    
-            const userDocRef = doc(db, 'usuarios', user.uid);
-            const userDocSnap = await getDoc(userDocRef);
-    
-            if (userDocSnap.exists()) {
-                const userData = userDocSnap.data();
-    
-                setTimeout(() => {
-                    if (userData.tipo === 'estudiante') {
-                        navigate('/inicio');
-                    } else if (userData.tipo === 'docente') {
-                        navigate('/inicio');
-                    } else if (userData.tipo === 'coordinador') {
-                        navigate('/inicio');
-                    } else {
-                        navigate('/inicio'); 
-                    }
-                }, 1000);
-            } else {
-                showError('No se encontró el perfil del usuario.');
-            }
+            await handleUserProfile(userCredential.user, 'email');
         } catch (error) {
-            const errorCode = error.code;
-            let message = 'Ocurrió un error';
-    
-            if (errorCode === 'auth/user-not-found') {
-                message = 'Usuario no encontrado';
-            } else if (errorCode === 'auth/wrong-password') {
-                message = 'Contraseña incorrecta';
-            } else if (errorCode === 'auth/invalid-email') {
-                message = 'Correo electrónico inválido';
-            }
-    
-            showError(message);
+            handleAuthError(error);
+        } finally {
+            setIsLoading(false);
         }
     };
-    
+
+    const handleGoogleLogin = async () => {
+        setIsLoading(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            await handleUserProfile(result.user, 'google');
+        } catch (error) {
+            handleAuthError(error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleUserProfile = async (user, provider) => {
+        try {
+            const userDocRef = doc(db, 'usuarios', user.uid);
+            const userDocSnap = await getDoc(userDocRef);
+
+            // Si el documento no existe
+            if (!userDocSnap.exists()) {
+                if (provider === 'google') {
+                    // Para Google: redirigir a registro con datos
+                    navigate('/register', {
+                        state: { 
+                            email: user.email,
+                            nombre: user.displayName || '',
+                            photoURL: user.photoURL || '',
+                            isGoogle: true
+                        }
+                    });
+                } else {
+                    // Para email/contraseña: crear perfil automáticamente y redirigir
+                    await setDoc(userDocRef, {
+                        nombre: email.split('@')[0],
+                        email: user.email,
+                        tipo: 'estudiante',
+                        perfilCompleto: true,
+                        fechaRegistro: new Date(),
+                        proveedor: 'email'
+                    });
+                    navigate('/inicio');
+                }
+                return;
+            }
+
+            // Si el documento existe pero el perfil está incompleto
+            const userData = userDocSnap.data();
+            if (!userData.perfilCompleto) {
+                navigate('/register', {
+                    state: {
+                        email: user.email,
+                        nombre: userData.nombre || '',
+                        tipo: userData.tipo || 'estudiante',
+                        isGoogle: provider === 'google',
+                        photoURL: user.photoURL || ''
+                    }
+                });
+                return;
+            }
+
+            // Perfil completo - redirigir al inicio
+            navigate('/inicio');
+            
+        } catch (error) {
+            console.error('Error al manejar perfil:', error);
+            showError('Error al verificar tu información de usuario');
+        }
+    };
+
+    const handleAuthError = (error) => {
+        const errorMap = {
+            'auth/user-not-found': 'Usuario no encontrado. ¿Quieres registrarte?',
+            'auth/wrong-password': 'Contraseña incorrecta',
+            'auth/invalid-email': 'Correo electrónico inválido',
+            'auth/popup-closed-by-user': 'Cancelaste el inicio de sesión con Google',
+            'auth/account-exists-with-different-credential': 'Este correo ya está registrado con otro método',
+            'auth/network-request-failed': 'Error de conexión. Verifica tu internet'
+        };
+
+        const message = errorMap[error.code] || 'Ocurrió un error al iniciar sesión';
+        showError(message);
+    };
 
     const showError = (msg) => {
         setError(msg);
@@ -73,9 +127,10 @@ const Login = () => {
     return (
         <Box className="login-container">
             <Paper elevation={10} className="login-box">
-                <Typography variant="h5" gutterBottom>
+                <Typography variant="h5" gutterBottom align="center">
                     Iniciar Sesión
                 </Typography>
+                
                 <form onSubmit={handleLogin}>
                     <TextField
                         label="Correo electrónico"
@@ -86,6 +141,7 @@ const Login = () => {
                         required
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={isLoading}
                     />
                     <TextField
                         label="Contraseña"
@@ -96,6 +152,7 @@ const Login = () => {
                         required
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        disabled={isLoading}
                     />
                     <Button
                         type="submit"
@@ -103,34 +160,46 @@ const Login = () => {
                         color="primary"
                         fullWidth
                         className="login-button"
+                        disabled={isLoading}
                     >
-                        Entrar
+                        {isLoading ? 'Cargando...' : 'Entrar'}
                     </Button>
                 </form>
 
-                <Typography variant="body2" align="center" className="login-footer">
+                <Divider sx={{ my: 2 }}>
+                    <Typography variant="body2" color="text.secondary">O</Typography>
+                </Divider>
+
+                <Button
+                    variant="outlined"
+                    fullWidth
+                    onClick={handleGoogleLogin}
+                    disabled={isLoading}
+                    startIcon={<GoogleIcon />}
+                    sx={{
+                        color: '#5F6368',
+                        borderColor: '#E0E0E0',
+                        '&:hover': {
+                            borderColor: '#D2D2D2',
+                            backgroundColor: '#F5F5F5'
+                        }
+                    }}
+                >
+                    Continuar con Google
+                </Button>
+
+                <Typography variant="body2" align="center" sx={{ mt: 2 }}>
                     ¿No tienes cuenta? <Link to="/register">Regístrate</Link>
                 </Typography>
-
-                {/* <div className="link-container">
-                    <Link to="/gestion-usuarios">Ir a gestión de usuarios</Link>
-                    <Link to="/registro-proyecto">Registrar un proyecto</Link>
-                    <Link to="/registro-avance">Registrar avance</Link>
-                    <Link to="/proyectos">Ver proyectos</Link>
-                    <Link to="/estado-proyecto">Ver estado de proyecto</Link>
-                    <Link to="/reportes">Reportes y Búsqueda</Link>
-                </div> */}
-                
             </Paper>
 
-            {/* Modal de error */}
             <Dialog open={openError} onClose={handleCloseError}>
                 <DialogTitle>Error al iniciar sesión</DialogTitle>
                 <DialogContent>
                     <Typography>{error}</Typography>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCloseError} autoFocus>Aceptar</Button>
+                    <Button onClick={handleCloseError}>Aceptar</Button>
                 </DialogActions>
             </Dialog>
         </Box>

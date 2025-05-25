@@ -1,6 +1,12 @@
 // Importa las funciones necesarias de los SDKs
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult
+} from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { getFunctions } from 'firebase/functions';
@@ -18,8 +24,25 @@ const firebaseConfig = {
 // Inicializa Firebase
 const app = initializeApp(firebaseConfig);
 
+// Configuración de autenticación
+const auth = getAuth(app);
+
+// Configuración del proveedor de Google
+const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+    prompt: 'select_account' // Solicita al usuario que seleccione una cuenta
+});
+googleProvider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+googleProvider.addScope('https://www.googleapis.com/auth/userinfo.email');
+
 // Exporta los servicios que usarás
-export const auth = getAuth(app);
+export {
+    auth,
+    googleProvider,
+    signInWithPopup,
+    signInWithRedirect,
+    getRedirectResult
+};
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const functions = getFunctions(app);
